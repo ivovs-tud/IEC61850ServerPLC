@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="CONSTANTS" Id="{1cd14af3-4e9e-4476-ae7a-07aec11c47f3}">
+    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
+	c_nNumTurbines	: UDINT := 3;
+	
+	(* IEC 61850 Server Definitions *)
+	c_aIpAddr 		: STRING := '172.19.3.198';
+	c_aMMSPortBase 	: UDINT := 102;
+	c_aAP_invIDBase : INT := 0;
+	c_nNumSessions	: UINT := 1;
+	
+	(* UDP Connection Constants *)
+	sSrvNetId			: T_AmsNetID 	:= '';(* TwinCAT TCP/IP server network address. Default: empty string. *)
+	sLocalHost			: T_IPv4Addr 	:= '172.19.3.198';(* Local address: String containing an (Ipv4) Internet Protocol dotted address. *)
+	nLocalTxPort		: UDINT			:= 10000;	(* UDP port used for transmission *)
+	nLocalRxPort		: UDINT			:= 10001;	(* UDP port used for receiving *)
+	sRemoteHost			: T_IPv4Addr 	:= '172.19.3.43';(* Remote address: String containing an (Ipv4) Internet Protocol dotted address. *)
+	nRemotePort			: UDINT 		:= 11000;(* Remote address: IP port number. *)
+	
+	UDP_RX_BUFFER_SIZE 	: UDINT := 1024; 	// Size of the UDP RX FIFO Buffer in Bytes
+	UDP_TX_BUFFER_SIZE 	: UDINT := 1024; 	// Size of the UDP TX FIFO Buffer in Bytes
+	
+	UDP_ERR_TX_FIFO_OF	: UDINT := 16#8103;
+	UDP_ERR_RX_FIFO_OF	: UDINT := 16#8104;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

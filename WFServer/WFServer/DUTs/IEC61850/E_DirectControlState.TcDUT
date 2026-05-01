@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_DirectControlState" Id="{2e3917bd-7c45-44ad-a15d-285545cf76a5}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_DirectControlState : 
+(
+	Ready := 0,
+	WaitForActivationTime := 1,
+	PerformTest := 2,
+	WaitForExecution := 3,
+	Operate := 4,
+	WaitForChange := 5,
+	MirrorBlockedCommand := 6
+) ;
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

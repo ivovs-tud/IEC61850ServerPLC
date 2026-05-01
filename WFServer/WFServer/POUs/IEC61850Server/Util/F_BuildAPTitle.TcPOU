@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="F_BuildAPTitle" Id="{059a3f35-772f-419b-9c48-7518e55ff3d9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_BuildAPTitle : STRING
+VAR_INPUT
+    iValue : UDINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[F_BuildAPTitle := CONCAT('1.1.1.999.', UDINT_TO_STRING(iValue));]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_SboControlState" Id="{21e9345d-da8f-48f6-be46-cb2937a55e76}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_SboControlState : 
+(
+	Unselected := 0,
+	Select_PerformTest := 1,
+	WaitForSelection := 2,
+	Ready := 3,
+	WaitForActivationTime := 4,
+	PerformTest := 5,
+	WaitForExecution := 6,
+	MirrorBlockedCommand := 7,
+	Operate := 8,
+	WaitForChange := 9,
+	EndSelection := 10
+) ;
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FileVersion>1.0.0.0</FileVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6ce933e7-89db-4c8b-8a41-0bd257dc4efb}</ProjectGuid>
+    <SubObjectsSortedByName>true</SubObjectsSortedByName>
+    <DownloadApplicationInfo>true</DownloadApplicationInfo>
+    <WriteProductVersion>false</WriteProductVersion>
+    <GenerateTpy>false</GenerateTpy>
+    <Name>WFServer</Name>
+    <ProgramVersion>3.1.4026.14</ProgramVersion>
+    <Application>{a7e3e845-49ec-42fa-885e-277dd47e29dc}</Application>
+    <TypeSystem>{7d250746-9f59-43b9-971d-48b1d2c99b82}</TypeSystem>
+    <Implicit_Task_Info>{7708f55c-e6a8-4007-98e2-8327f8192fbf}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{fb2525d2-97b6-490b-9a5c-f26b07cc3bf7}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{e49d5166-f25a-4fc6-b8a4-ad784f609787}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{c2fd934e-4540-42b5-9b00-eaa463525b2a}</LibraryReferences>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="DUTs\IEC61850\E_DirectControlState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\IEC61850\E_SboControlState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\IEC61850\User61850Enums\E_ClrOp.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\IEC61850\User61850Enums\E_CtlMd.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\IEC61850\User61850Enums\E_TurCtl.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\UDP\E_UDPClientServerState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\UDP\ST_UDPFrameEntry.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GVLs\CONSTANTS.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="GVLs\TcTelecontrol.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\FB_Control.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\FB_DirectControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\FB_DirectControlEnhanced.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\FB_SboControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\FB_SboControlEnhanced.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\FB_WTURBINEGse.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\FB_WTURBINEServerSession.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\P_IEC61850.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\P_IEC61850ServerInit.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\User61850Enums\FB_ClrOp.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\User61850Enums\FB_CtlMd.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\User61850Enums\FB_TurCtl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\Util\F_BuildAPTitle.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\Util\F_BuildSelector.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\Util\F_UdintToStringPadded.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\FB_IED_WTURBINE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\FB_LD_WTURBINELD0.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\LLN0\CDCs\FB_DO_WTURBINE_LD0_LLN0_Beh.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\LLN0\CDCs\FB_DO_WTURBINE_LD0_LLN0_Health.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\LLN0\CDCs\FB_DO_WTURBINE_LD0_LLN0_Mod.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\LLN0\CDCs\FB_DO_WTURBINE_LD0_LLN0_NamPlt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\LLN0\FB_LN_WTURBINE_LD0_LLN0.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\LPHD1\CDCs\FB_DO_WTURBINE_LD0_LPHD1_PhyHealth.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\LPHD1\CDCs\FB_DO_WTURBINE_LD0_LPHD1_PhyNam.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\LPHD1\CDCs\FB_DO_WTURBINE_LD0_LPHD1_Proxy.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\LPHD1\FB_LN_WTURBINE_LD0_LPHD1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WALM1\CDCs\FB_DO_WTURBINE_LD0_WALM1_AlmSt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WALM1\CDCs\FB_DO_WTURBINE_LD0_WALM1_Beh.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WALM1\FB_LN_WTURBINE_LD0_WALM1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WAPC1\CDCs\FB_DO_WTURBINE_LD0_WAPC1_AvlW.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WAPC1\CDCs\FB_DO_WTURBINE_LD0_WAPC1_Beh.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WAPC1\CDCs\FB_DO_WTURBINE_LD0_WAPC1_FrzW.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WAPC1\CDCs\FB_DO_WTURBINE_LD0_WAPC1_WCurTgt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WAPC1\CDCs\FB_DO_WTURBINE_LD0_WAPC1_WDeltaSpt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WAPC1\CDCs\FB_DO_WTURBINE_LD0_WAPC1_WRmpTgt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WAPC1\CDCs\FB_DO_WTURBINE_LD0_WAPC1_WSetPt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WAPC1\FB_LN_WTURBINE_LD0_WAPC1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WGEN1\CDCs\FB_DO_WTURBINE_LD0_WGEN1_Beh.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WGEN1\CDCs\FB_DO_WTURBINE_LD0_WGEN1_RotSpd.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WGEN1\CDCs\FB_DO_WTURBINE_LD0_WGEN1_TmpBrg.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WGEN1\CDCs\FB_DO_WTURBINE_LD0_WGEN1_TmpWdg.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WGEN1\CDCs\FB_DO_WTURBINE_LD0_WGEN1_TotVAr.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WGEN1\CDCs\FB_DO_WTURBINE_LD0_WGEN1_TotW.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WGEN1\FB_LN_WTURBINE_LD0_WGEN1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WMET1\CDCs\FB_DO_WTURBINE_LD0_WMET1_AirPres.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WMET1\CDCs\FB_DO_WTURBINE_LD0_WMET1_Beh.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WMET1\CDCs\FB_DO_WTURBINE_LD0_WMET1_EnvTmp.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WMET1\CDCs\FB_DO_WTURBINE_LD0_WMET1_HorWdDir.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WMET1\CDCs\FB_DO_WTURBINE_LD0_WMET1_HorWdSpd.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WMET1\CDCs\FB_DO_WTURBINE_LD0_WMET1_HorWdSpd10m.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WMET1\FB_LN_WTURBINE_LD0_WMET1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WNAC1\CDCs\FB_DO_WTURBINE_LD0_WNAC1_Beh.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WNAC1\CDCs\FB_DO_WTURBINE_LD0_WNAC1_CtlMd.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WNAC1\CDCs\FB_DO_WTURBINE_LD0_WNAC1_NacDir.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WNAC1\CDCs\FB_DO_WTURBINE_LD0_WNAC1_NacPos.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WNAC1\FB_LN_WTURBINE_LD0_WNAC1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WPPD1\CDCs\FB_DO_WTURBINE_LD0_WPPD1_ClrOp.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WPPD1\CDCs\FB_DO_WTURBINE_LD0_WPPD1_DevOp.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WPPD1\CDCs\FB_DO_WTURBINE_LD0_WPPD1_DevSt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WPPD1\CDCs\FB_DO_WTURBINE_LD0_WPPD1_DevSt_st.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WPPD1\FB_LN_WTURBINE_LD0_WPPD1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs\FB_DO_WTURBINE_LD0_WROT1_Beh.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs\FB_DO_WTURBINE_LD0_WROT1_BlPthAngTgt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs\FB_DO_WTURBINE_LD0_WROT1_BlPthAngVal.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs\FB_DO_WTURBINE_LD0_WROT1_BlSt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs\FB_DO_WTURBINE_LD0_WROT1_BlSt_st.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs\FB_DO_WTURBINE_LD0_WROT1_PthCtlSt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs\FB_DO_WTURBINE_LD0_WROT1_PthCtlSt_st.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs\FB_DO_WTURBINE_LD0_WROT1_RotBlk.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs\FB_DO_WTURBINE_LD0_WROT1_RotSpd.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs\FB_DO_WTURBINE_LD0_WROT1_RotSt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs\FB_DO_WTURBINE_LD0_WROT1_RotSt_st.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\FB_LN_WTURBINE_LD0_WROT1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTRM1\CDCs\FB_DO_WTURBINE_LD0_WTRM1_Beh.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTRM1\CDCs\FB_DO_WTURBINE_LD0_WTRM1_Hz.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTRM1\CDCs\FB_DO_WTURBINE_LD0_WTRM1_TmpWdg.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTRM1\CDCs\FB_DO_WTURBINE_LD0_WTRM1_VAr.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTRM1\CDCs\FB_DO_WTURBINE_LD0_WTRM1_Vol.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTRM1\CDCs\FB_DO_WTURBINE_LD0_WTRM1_W.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTRM1\FB_LN_WTURBINE_LD0_WTRM1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_Beh.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_CmdBlk.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_DmdWSpt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_ErrorSt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_StopCnt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_StopCnt_cntVal.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_StrCnt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_StrCnt_cntVal.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_TotWh.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_TotWh_cntVal.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_TurCtl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_TurOp.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_TurSt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_TurSt_st.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs\FB_DO_WTURBINE_LD0_WTUR1_W.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\FB_LN_WTURBINE_LD0_WTUR1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1\CDCs\FB_DO_WTURBINE_LD0_WYAW1_Beh.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1\CDCs\FB_DO_WTURBINE_LD0_WYAW1_CabWup.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1\CDCs\FB_DO_WTURBINE_LD0_WYAW1_YwAng.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1\CDCs\FB_DO_WTURBINE_LD0_WYAW1_YwAngSpt.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1\CDCs\FB_DO_WTURBINE_LD0_WYAW1_YwBrk.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1\CDCs\FB_DO_WTURBINE_LD0_WYAW1_YwOp.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1\FB_LN_WTURBINE_LD0_WYAW1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\IEC61850_MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\UDP\FB_UDPTxStateMachine.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\UDP\Util\FB_UDPFrameFIFO.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\UDP_RX_MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\UDP_TX_MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UDP_RX_TASK.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UDP_TX_TASK.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DUTs" />
+    <Folder Include="DUTs\IEC61850" />
+    <Folder Include="DUTs\IEC61850\User61850Enums" />
+    <Folder Include="DUTs\UDP" />
+    <Folder Include="GVLs" />
+    <Folder Include="POUs\IEC61850Server" />
+    <Folder Include="POUs\IEC61850Server\Util" />
+    <Folder Include="POUs\IEC61850Server\User61850Enums" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\LLN0" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\LLN0\CDCs" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\LPHD1" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\LPHD1\CDCs" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WALM1" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WALM1\CDCs" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WAPC1" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WAPC1\CDCs" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WGEN1" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WGEN1\CDCs" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WMET1" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WMET1\CDCs" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WNAC1" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WNAC1\CDCs" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WPPD1" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WPPD1\CDCs" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WROT1\CDCs" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WTRM1" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WTRM1\CDCs" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1" />
+    <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1\CDCs" />
+    <Folder Include="POUs\UDP" />
+    <Folder Include="POUs\UDP\Util" />
+    <Folder Include="VISUs" />
+    <Folder Include="POUs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PlaceholderReference Include="Tc2_Standard">
+      <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_Standard</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_System">
+      <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_System</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_TcpIp">
+      <DefaultResolution>Tc2_TcpIp, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_TcpIp</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_Utilities">
+      <DefaultResolution>Tc2_Utilities, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_Utilities</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Acsi">
+      <DefaultResolution>Tc3_Acsi, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Acsi</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Ber">
+      <DefaultResolution>Tc3_Ber, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Ber</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Collections">
+      <DefaultResolution>Tc3_Collections, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Collections</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_EventLogger">
+      <DefaultResolution>Tc3_EventLogger, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_EventLogger</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Gse">
+      <DefaultResolution>Tc3_Gse, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Gse</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_iec61850">
+      <DefaultResolution>Tc3_iec61850, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_iec61850</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_iec61850_8_1">
+      <DefaultResolution>Tc3_iec61850_8_1, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_iec61850_8_1</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Mms">
+      <DefaultResolution>Tc3_Mms, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Mms</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Module">
+      <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Module</Namespace>
+      <SystemLibrary>true</SystemLibrary>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Rfc1006">
+      <DefaultResolution>Tc3_Rfc1006, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Rfc1006</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Sockets">
+      <DefaultResolution>Tc3_Sockets, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Sockets</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Tpkt">
+      <DefaultResolution>Tc3_Tpkt, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Tpkt</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Ulosi">
+      <DefaultResolution>Tc3_Ulosi, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Ulosi</Namespace>
+    </PlaceholderReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WFServer.tmc">
+      <SubType>Content</SubType>
+    </None>
+  </ItemGroup>
+  <ProjectExtensions>
+    <PlcProjectOptions>
+      <XmlArchive>
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
+      <v n="Name">"&lt;ProjectRoot&gt;"</v>
+      <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
+        <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
+        <o>
+          <v n="Name">"{192FAD59-8248-4824-A8DE-9177C94C195A}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" />
+        </o>
+        <v>{29BD8D0C-3586-4548-BB48-497B9A01693F}</v>
+        <o>
+          <v n="Name">"{29BD8D0C-3586-4548-BB48-497B9A01693F}"</v>
+          <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
+            <v>NamingConventions</v>
+            <o>
+              <v n="Name">"NamingConventions"</v>
+              <d n="SubKeys" t="Hashtable" />
+              <d n="Values" t="Hashtable" />
+            </o>
+            <v>Rules</v>
+            <o>
+              <v n="Name">"Rules"</v>
+              <d n="SubKeys" t="Hashtable" />
+              <d n="Values" t="Hashtable" />
+            </o>
+          </d>
+          <d n="Values" t="Hashtable" />
+        </o>
+        <v>{40450F57-0AA3-4216-96F3-5444ECB29763}</v>
+        <o>
+          <v n="Name">"{40450F57-0AA3-4216-96F3-5444ECB29763}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" ckt="String" cvt="String">
+            <v>ActiveVisuProfile</v>
+            <v>IR0whWr8bwcSCAAA07fJ8AAAAACAAgAA328y+gAAAAABAAAAAAAAAAEaUwB5AHMAdABlAG0ALgBTAHQAcgBpAG4AZwACTHsAZgA5ADUAYgBiADQAMgA2AC0ANQA1ADIANAAtADQAYgA0ADUALQA5ADQAMAAwAC0AZgBiADAAZgAyAGUANwA3AGUANQAxAGIAfQADCE4AYQBtAGUABDJUAHcAaQBuAEMAQQBUACAAMwAuADEAIABCAHUAaQBsAGQAIAA0ADAAMgA2AC4AMQA0AAUWUAByAG8AZgBpAGwAZQBEAGEAdABhAAZMewAxADYAZQA1ADUAYgA2ADAALQA3ADAANAAzAC0ANABhADYAMwAtAGIANgA1AGIALQA2ADEANAA3ADEAMwA4ADcAOABkADQAMgB9AAcSTABpAGIAcgBhAHIAaQBlAHMACEx7ADMAYgBmAGQANQA0ADUAOQAtAGIAMAA3AGYALQA0AGQANgBlAC0AYQBlADEAYQAtAGEAOAAzADMANQA2AGEANQA1ADEANAAyAH0ACUx7ADkAYwA5ADUAOAA5ADYAOAAtADIAYwA4ADUALQA0ADEAYgBiAC0AOAA4ADcAMQAtADgAOQA1AGYAZgAxAGYAZQBkAGUAMQBhAH0ACg5WAGUAcgBzAGkAbwBuAAsGaQBuAHQADApVAHMAYQBnAGUADQpUAGkAdABsAGUADhpWAGkAcwB1AEUAbABlAG0ATQBlAHQAZQByAA8OQwBvAG0AcABhAG4AeQAQDFMAeQBzAHQAZQBtABESVgBpAHMAdQBFAGwAZQBtAHMAEjBWAGkAcwB1AEUAbABlAG0AcwBTAHAAZQBjAGkAYQBsAEMAbwBuAHQAcgBvAGwAcwATKFYAaQBzAHUARQBsAGUAbQBzAFcAaQBuAEMAbwBuAHQAcgBvAGwAcwAUJFYAaQBzAHUARQBsAGUAbQBUAGUAeAB0AEUAZABpAHQAbwByABUiVgBpAHMAdQBOAGEAdABpAHYAZQBDAG8AbgB0AHIAbwBsABYeVgBpAHMAdQBFAGwAZQBtAFgAWQBDAGgAYQByAHQAFxRWAGkAcwB1AEkAbgBwAHUAdABzABgYVgBpAHMAdQBFAGwAZQBtAEIAYQBzAGUAGSZEAGUAdgBQAGwAYQBjAGUAaABvAGwAZABlAHIAcwBVAHMAZQBkABoIYgBvAG8AbAAbIlAAbAB1AGcAaQBuAEMAbwBuAHMAdAByAGEAaQBuAHQAcwAcTHsANAAzAGQANQAyAGIAYwBlAC0AOQA0ADIAYwAtADQANABkADcALQA5AGUAOQA0AC0AMQBiAGYAZABmADMAMQAwAGUANgAzAGMAfQAdHEEAdABMAGUAYQBzAHQAVgBlAHIAcwBpAG8AbgAeFFAAbAB1AGcAaQBuAEcAdQBpAGQAHxZTAHkAcwB0AGUAbQAuAEcAdQBpAGQAIEhhAGYAYwBkADUANAA0ADYALQA0ADkAMQA0AC0ANABmAGUANwAtAGIAYgA3ADgALQA5AGIAZgBmAGUAYgA3ADAAZgBkADEANwAhFFUAcABkAGEAdABlAEkAbgBmAG8AIkx7AGIAMAAzADMANgA2AGEAOAAtAGIANQBjADAALQA0AGIAOQBhAC0AYQAwADAAZQAtAGUAYgA4ADYAMAAxADEAMQAwADQAYwAzAH0AIw5VAHAAZABhAHQAZQBzACRMewAxADgANgA4AGYAZgBjADkALQBlADQAZgBjAC0ANAA1ADMAMgAtAGEAYwAwADYALQAxAGUAMwA5AGIAYgA1ADUANwBiADYAOQB9ACVMewBhADUAYgBkADQAOABjADMALQAwAGQAMQA3AC0ANAAxAGIANQAtAGIAMQA2ADQALQA1AGYAYwA2AGEAZAAyAGIAOQA2AGIANwB9ACYWTwBiAGoAZQBjAHQAcwBUAHkAcABlACdUVQBwAGQAYQB0AGUATABhAG4AZwB1AGEAZwBlAE0AbwBkAGUAbABGAG8AcgBDAG8AbgB2AGUAcgB0AGkAYgBsAGUATABpAGIAcgBhAHIAaQBlAHMAKBBMAGkAYgBUAGkAdABsAGUAKRRMAGkAYgBDAG8AbQBwAGEAbgB5ACoeVQBwAGQAYQB0AGUAUAByAG8AdgBpAGQAZQByAHMAKzhTAHkAcwB0AGUAbQAuAEMAbwBsAGwAZQBjAHQAaQBvAG4AcwAuAEgAYQBzAGgAdABhAGIAbABlACwSdgBpAHMAdQBlAGwAZQBtAHMALQxzAHkAcwB0AGUAbQAuSDYAYwBiADEAYwBkAGUAMQAtAGQANQBkAGMALQA0AGEAMwBiAC0AOQAwADUANAAtADIAMQBmAGEANwA1ADYAYQAzAGYAYQA0AC8oSQBuAHQAZQByAGYAYQBjAGUAVgBlAHIAcwBpAG8AbgBJAG4AZgBvADBMewBjADYAMQAxAGUANAAwADAALQA3AGYAYgA5AC0ANABjADMANQAtAGIAOQBhAGMALQA0AGUAMwAxADQAYgA1ADkAOQA2ADQAMwB9ADEYTQBhAGoAbwByAFYAZQByAHMAaQBvAG4AMhhNAGkAbgBvAHIAVgBlAHIAcwBpAG8AbgAzDEwAZQBnAGEAYwB5ADQwTABhAG4AZwB1AGEAZwBlAE0AbwBkAGUAbABWAGUAcgBzAGkAbwBuAEkAbgBmAG8ANTBMAG8AYQBkAEwAaQBiAHIAYQByAGkAZQBzAEkAbgB0AG8AUAByAG8AagBlAGMAdAA2GkMAbwBtAHAAYQB0AGkAYgBpAGwAaQB0AHkA0AACGgPQAwEtBNAFBhoH0AcIGgFFBwkJ0AAJGgRFCgsEBAAAAAcAAAAAAAAAAAAAANAMC60CAAAA0A0BLQ7QDwEtENAACRoERQoLBAQAAAAHAAAAAAAAAAAAAADQDAutAQAAANANAS0R0A8BLRDQAAkaBEUKCwQEAAAABwAAAAAAAAAAAAAA0AwLrQIAAADQDQEtEtAPAS0Q0AAJGgRFCgsEBAAAAAcAAAAAAAAAAAAAANAMC60CAAAA0A0BLRPQDwEtENAACRoERQoLBAQAAAAHAAAAAAAAAAAAAADQDAutAgAAANANAS0U0A8BLRDQAAkaBEUKCwQEAAAABwAAAAAAAAAAAAAA0AwLrQIAAADQDQEtFdAPAS0Q0AAJGgRFCgsEBAAAAAcAAAAAAAAAAAAAANAMC60CAAAA0A0BLRbQDwEtENAACRoERQoLBAQAAAAHAAAAAAAAAAAAAADQDAutAgAAANANAS0X0A8BLRDQAAkaBEUKCwQEAAAABwAAAAAAAAAAAAAA0AwLrQQAAADQDQEtGNAPAS0Q0BkarQFFGxwB0AAcGgJFHQsEBAAAAAIAAAAAAAAAAAAAANAeHy0g0CEiGgJFIyQC0AAlGgVFCgsEAwAAAAMAAAAAAAAACgAAANAmC60AAAAA0AMBLSfQKAEtEdApAS0Q0AAlGgVFCgsEAwAAAAMAAAAAAAAACgAAANAmC60BAAAA0AMBLSfQKAEtEdApAS0QmiorAUUAAQLQAAEtLNAAAS0t0AAfLS7QLzAaA9AxC60BAAAA0DILrSQAAADQMxqtANA0MBoD0DELrQIAAADQMgutBgAAANAzGq0A0DUarQDQNhqtAA==</v>
+          </d>
+        </o>
+        <v>{8A0FB252-96EB-4DCC-A5B4-B4804D05E2D6}</v>
+        <o>
+          <v n="Name">"{8A0FB252-96EB-4DCC-A5B4-B4804D05E2D6}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" ckt="String" cvt="Boolean">
+            <v>WriteLineIDs</v>
+            <v>False</v>
+          </d>
+        </o>
+        <v>{8F99A816-E488-41E4-9FA3-846536012284}</v>
+        <o>
+          <v n="Name">"{8F99A816-E488-41E4-9FA3-846536012284}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" ckt="String" cvt="String">
+            <v>DisabledWarningIds</v>
+            <v>410,5410</v>
+          </d>
+        </o>
+        <v>{F66C7017-BDD8-4114-926C-81D6D687E35F}</v>
+        <o>
+          <v n="Name">"{F66C7017-BDD8-4114-926C-81D6D687E35F}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" ckt="String" cvt="Boolean">
+            <v>CalcActiveTransOnly</v>
+            <v>True</v>
+          </d>
+        </o>
+      </d>
+      <d n="Values" t="Hashtable" />
+    </o>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
+    </PlcProjectOptions>
+  </ProjectExtensions>
+</Project>

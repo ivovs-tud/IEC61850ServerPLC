@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_ClrOp" Id="{fdea1a0d-b8e5-4791-91e9-ff51054ae554}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_explicit_call' := 'Direct call not allowed for type FB_ClrOp'}
+{attribute 'call_after_init'}
+FUNCTION_BLOCK FB_ClrOp EXTENDS FB_AcsiBATypeENUMERATED
+VAR
+	_eValue: E_ClrOp;
+	_eConfig: E_ClrOp;
+	{attribute 'hide'}
+	ipInit: I_AcsiCommonAttributeClass := THIS^.AddDAValue(eP:=E_AcsiP.Actual, in:=_eValue).AddDAValue(eP:=E_AcsiP.Config, in:=_eConfig).AddDAType(in:=THIS^.T(in:=E_AcsiBasicType.INT8));
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="eConfig" Id="{55db3859-c816-4dbf-bf4b-f1c148c0d889}">
+      <Declaration><![CDATA[PROPERTY eConfig : E_ClrOp]]></Declaration>
+      <Get Name="Get" Id="{d322086a-5236-4ccb-bde2-3fd47d9837e4}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eConfig:= _eConfig;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="eValue" Id="{4e1af882-134d-4bb6-8e65-44774f8b2dbf}">
+      <Declaration><![CDATA[PROPERTY eValue : E_ClrOp]]></Declaration>
+      <Get Name="Get" Id="{d6a8bc52-4e58-43ce-817c-89bed49d1faa}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eValue:= _eValue;
+OnGetVPropEvt();]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{fc5c33e1-1937-405a-bb4f-e4a6fd8c189a}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_bChanged:= _eValue <> eValue;
+_eValue:= eValue;
+OnSetVPropEvt(bChanged := _bChanged);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

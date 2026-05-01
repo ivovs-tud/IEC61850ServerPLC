@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="P_IEC61850MAIN" Id="{c4980344-d71e-4ccf-9e09-bede6b67863a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_IEC61850MAIN
+VAR
+	i: UDINT;
+	j: UDINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// fbWTURBINEServer.Execute();
+// fbWTURBINEServerSession1();
+
+(*
+fbWTURBINEServerSession2();
+...
+fbWTURBINEServerSessionN();
+*)
+// fbWTURBINEGse();
+
+FOR i := 1 TO c_nNumTurbines DO
+	fbServer[i].Execute();
+	FOR j := 1 TO c_nNumSessions DO
+		fbSession[i,j]();
+	END_FOR
+END_FOR]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

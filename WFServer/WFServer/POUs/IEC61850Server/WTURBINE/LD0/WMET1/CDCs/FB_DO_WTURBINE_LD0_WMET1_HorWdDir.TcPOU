@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Productversion="">
+  <POU Name="FB_DO_WTURBINE_LD0_WMET1_HorWdDir" Id="c3e59361-4c66-469f-8308-1692cf0614bc" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WMET1_HorWdDir EXTENDS FB_AcsiCommonDataClass
+VAR_INPUT
+	mag: FB_AcsiDATypeAnalogueValue := (Fc:=ACSI_FC_MX, TrgOp:=ACSI_TrgOp_dchg OR ACSI_TrgOp_dupd, i:=(bPresence:=FALSE), bLinkResult:=THIS^.AddDataToContainer(ipData:=mag));
+	q: FB_AcsiDATypeQuality := (Fc:=ACSI_FC_MX, TrgOp:=ACSI_TrgOp_qchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=q));
+	t: FB_AcsiDATypeTimeStamp := (Fc:=ACSI_FC_MX, bLinkResult:=THIS^.AddDataToContainer(ipData:=t));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

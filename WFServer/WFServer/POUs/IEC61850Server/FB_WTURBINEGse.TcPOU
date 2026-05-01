@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_WTURBINEGse" Id="{3703a476-b1f6-4885-a1b7-5b4a9ba8b594}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_WTURBINEGse IMPLEMENTS I_GseLinkStatusEventSink
+VAR_INPUT
+	fbAdapter		: FB_GseAdapterClass := (ipLinkStatus:=THIS^);
+END_VAR
+VAR
+	eLinkStatus		: E_GseLinkStatus;
+	
+	bSuccess		: BOOL;
+	ipError			: I_ServiceErrorClass;
+	
+	bStart			: BOOL := TRUE; (* Rising edge starts publishing of GOOSE data *)
+	bStop			: BOOL; (* Rising edge stops publishing of GOOSE data *)
+	bUpdate			: BOOL; (* Rising edge updates published GOOSE data *)
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*=========================================================================================*)
+bSuccess:= fbAdapter.Execute(ipError=>ipError); (* Execute network adapter *)
+
+(*=========================================================================================*)
+IF bStart THEN (* Start publishing of GOOSE data *)
+	bStart:= FALSE;
+	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Start(ipAdapter:=fbAdapter, ipError=>ipError);
+ELSIF bStop THEN (* Stop publishing of GOOSE data *)
+	bStop:= FALSE;
+	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Stop(ipError=>ipError);
+ELSIF bUpdate THEN (* Update published GOOSE data *)
+	bUpdate:= FALSE;
+	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Update(ipError=>ipError);
+ELSE (* Execute publisher GoCB's *)
+	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Execute(ipError=>ipError);
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="OnLinkStatusChange" Id="{cdccf58f-305b-44e8-9bd2-2e9210098848}">
+      <Declaration><![CDATA[(* This method is called every time the network adapter link status changes. *)
+METHOD OnLinkStatusChange
+VAR_INPUT
+	ipAdapter	: I_GseAdapterClass;
+	eStatus		: E_GseLinkStatus;
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eLinkStatus:= eStatus;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

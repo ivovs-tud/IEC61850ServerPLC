@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_ClrOp" Id="{87c7cf77-cf4d-49ca-87a3-e3d3c9ed0f24}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_ClrOp : 
+(
+	e_0 := 0, (*None*)
+	e_1 := 1 (*Clear*)
+) SINT;
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

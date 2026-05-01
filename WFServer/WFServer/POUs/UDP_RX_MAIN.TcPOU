@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="UDP_RX_MAIN" Id="{da0e4c2a-35ee-4cf5-990d-e0180ade60e9}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM UDP_RX_MAIN
+VAR
+	fbCloseAll 			: FB_SocketCloseAll;
+   	bInitialize			: BOOL := TRUE;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* On PLC reset or program download close all opened/created sockets *)
+fbCloseAll( sSrvNetId := sSrvNetId, bExecute:= bInitialize );
+IF fbCloseAll.bBusy OR fbCloseAll.bError THEN
+	RETURN;
+END_IF
+bInitialize := FALSE;
+
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

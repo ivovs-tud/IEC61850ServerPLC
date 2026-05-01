@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Productversion="">
+  <POU Name="FB_LN_WTURBINE_LD0_WNAC1" Id="6bcd776a-8553-4590-bb97-9f1940e0be9a" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_LN_WTURBINE_LD0_WNAC1 EXTENDS FB_AcsiCommonLogicalNodeClass
+VAR_INPUT
+	Beh: FB_DO_WTURBINE_LD0_WNAC1_Beh := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Beh));
+	NacPos: FB_DO_WTURBINE_LD0_WNAC1_NacPos := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=NacPos));
+	NacDir: FB_DO_WTURBINE_LD0_WNAC1_NacDir := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=NacDir));
+	CtlMd: FB_DO_WTURBINE_LD0_WNAC1_CtlMd := (sClass:='ENC', bLinkResult:=THIS^.AddDataToContainer(ipData:=CtlMd));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

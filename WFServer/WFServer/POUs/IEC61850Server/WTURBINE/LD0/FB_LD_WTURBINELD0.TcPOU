@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Productversion="">
+  <POU Name="FB_LD_WTURBINELD0" Id="18561df3-f84f-40e0-ad0e-083cc5179d99" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_LD_WTURBINELD0 EXTENDS FB_AcsiCommonLogicalDeviceClass
+VAR_INPUT
+	LLN0: FB_LN_WTURBINE_LD0_LLN0 := (sClass:='LLN0', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=LLN0));
+	LPHD1: FB_LN_WTURBINE_LD0_LPHD1 := (sClass:='LPHD', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=LPHD1));
+	WPPD1: FB_LN_WTURBINE_LD0_WPPD1 := (sClass:='WPPD', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=WPPD1));
+	WTUR1: FB_LN_WTURBINE_LD0_WTUR1 := (sClass:='WTUR', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=WTUR1));
+	WROT1: FB_LN_WTURBINE_LD0_WROT1 := (sClass:='WROT', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=WROT1));
+	WGEN1: FB_LN_WTURBINE_LD0_WGEN1 := (sClass:='WGEN', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=WGEN1));
+	WNAC1: FB_LN_WTURBINE_LD0_WNAC1 := (sClass:='WNAC', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=WNAC1));
+	WYAW1: FB_LN_WTURBINE_LD0_WYAW1 := (sClass:='WYAW', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=WYAW1));
+	WMET1: FB_LN_WTURBINE_LD0_WMET1 := (sClass:='WMET', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=WMET1));
+	WALM1: FB_LN_WTURBINE_LD0_WALM1 := (sClass:='WALM', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=WALM1));
+	WAPC1: FB_LN_WTURBINE_LD0_WAPC1 := (sClass:='WAPC', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=WAPC1));
+	WTRM1: FB_LN_WTURBINE_LD0_WTRM1 := (sClass:='WTRM', bLinkResult:=THIS^.AddLogicalNodeToContainer(ipLogicalNode:=WTRM1));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

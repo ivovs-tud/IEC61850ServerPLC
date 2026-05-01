@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Productversion="">
+  <POU Name="FB_DO_WTURBINE_LD0_WPPD1_DevSt" Id="1c24dfae-d051-4d59-a9fd-5d9c0d035601" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WPPD1_DevSt EXTENDS FB_AcsiCommonDataClass
+VAR_INPUT
+	st_: FB_DO_WTURBINE_LD0_WPPD1_DevSt_st := (sObjectName:='st', sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=st_));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

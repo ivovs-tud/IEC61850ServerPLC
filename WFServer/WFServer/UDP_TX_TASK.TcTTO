@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Task Name="UDP_TX_TASK" Id="{48e56708-e8cd-499e-a897-6a75adfc203f}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>10000</CycleTime>
+    <Priority>13</Priority>
+    <PouCall>
+      <Name>UDP_TX_MAIN</Name>
+    </PouCall>
+    <TaskFBGuid>{c36a8f17-17fb-403c-8280-ead97298f340}</TaskFBGuid>
+    <Fb_init>{03613554-a805-46b0-a5e9-5546639eb0b6}</Fb_init>
+    <Fb_exit>{3d483785-4f93-4b58-a039-a0d4b0a53d7f}</Fb_exit>
+    <CycleUpdate>{c2ddcc9d-bb96-4d54-9970-cea5a32f4472}</CycleUpdate>
+    <PostCycleUpdate>{850265bb-35ed-4158-93c4-e3b5f68e5739}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

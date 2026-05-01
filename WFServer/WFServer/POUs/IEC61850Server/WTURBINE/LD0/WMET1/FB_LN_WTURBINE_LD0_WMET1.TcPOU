@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Productversion="">
+  <POU Name="FB_LN_WTURBINE_LD0_WMET1" Id="6ae68e28-18c0-491f-ad78-acab8aa05d49" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_LN_WTURBINE_LD0_WMET1 EXTENDS FB_AcsiCommonLogicalNodeClass
+VAR_INPUT
+	Beh: FB_DO_WTURBINE_LD0_WMET1_Beh := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Beh));
+	HorWdSpd: FB_DO_WTURBINE_LD0_WMET1_HorWdSpd := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=HorWdSpd));
+	HorWdDir: FB_DO_WTURBINE_LD0_WMET1_HorWdDir := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=HorWdDir));
+	HorWdSpd10m: FB_DO_WTURBINE_LD0_WMET1_HorWdSpd10m := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=HorWdSpd10m));
+	EnvTmp: FB_DO_WTURBINE_LD0_WMET1_EnvTmp := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=EnvTmp));
+	AirPres: FB_DO_WTURBINE_LD0_WMET1_AirPres := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=AirPres));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

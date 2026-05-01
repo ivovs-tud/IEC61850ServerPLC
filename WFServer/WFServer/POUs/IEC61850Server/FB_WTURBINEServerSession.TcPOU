@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_WTURBINEServerSession" Id="{52982ed7-c084-408a-b17e-4762296c4a91}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_WTURBINEServerSession IMPLEMENTS I_ScsmAbortIndEventSink, I_ScsmAssociateIndEventSink, I_ScsmReleaseIndEventSink
+VAR_INPUT
+	fbConnection		: FB_iec61850ConnectionClass := (ipAbortInd:=THIS^, ipAssociateInd:=THIS^, ipReleaseInd:=THIS^);
+	nID					: UDINT;
+END_VAR
+VAR
+	_bAbort				: BOOL; (* Rising edge activates AbortReq() command execution *)
+	_bDisconnect		: BOOL; (* Rising edge activates ReleaseReq() command execution *)
+	
+	state				: BYTE;
+	eState				: E_AsyncEnvironmentState; (* Environment state *)
+	eLinkStatus			: E_ScsmLinkStatus; (* Network adapter link status *)
+	bBusy				: BOOL; (* If TRUE => command execution is busy *)
+	bSuccess			: BOOL;
+	ipResult			: I_AsyncServiceResultClass;
+	sLastErrorResult	: T_MaxString;
+	fbAbortReason		: FB_ServiceErrorClass := (stError:=SUCCESS_EVENT);
+	sLastAbortReason	: T_MaxString;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbConnection.Execute();
+eState:= fbConnection.eState;
+eLinkStatus:= fbConnection.eLinkStatus;
+
+(* Execute control model control block implementations *)
+// fbWTURBINE.WTURBINELD0.LLN0.Mod_.fbControl.Execute();
+// fbWTURBINE.WTURBINELD0.WTUR1.CmdBlk.fbControl.Execute();
+// fbWTURBINE.WTURBINELD0.WNAC1.CtlMd.fbControl.Execute();
+// fbWTURBINE.WTURBINELD0.WYAW1.YwBrk.fbControl.Execute();
+
+fbWTURBINE[nID].WTURBINELD0.LLN0.Mod_.fbControl.Execute();
+fbWTURBINE[nID].WTURBINELD0.WTUR1.CmdBlk.fbControl.Execute();
+fbWTURBINE[nID].WTURBINELD0.WNAC1.CtlMd.fbControl.Execute();
+fbWTURBINE[nID].WTURBINELD0.WYAW1.YwBrk.fbControl.Execute();
+
+CASE state OF
+	0: (* Initial state *)
+		IF _bAbort THEN (* Abort connection => execute AbortReq() command *)
+			_bAbort:= FALSE;
+			bSuccess:= fbConnection.AbortReq(ipReason:=fbAbortReason, ipSink:=0, ipResult=>ipResult);
+			state:= SEL(bSuccess, 100, 1);
+		ELSIF eState = E_AsyncEnvironmentState.Established AND _bDisconnect THEN (* Close/release connection => execute ReleaseReq() command *)
+			_bDisconnect:= FALSE;
+			bSuccess:= fbConnection.ReleaseReq(ipSink:=0, ipResult=>ipResult);
+			state:= SEL(bSuccess, 100, 1);
+		ELSIF eState = E_AsyncEnvironmentState.Established THEN (* Connection established => exchange IED data *)
+			state:= 10;
+		END_IF
+		_bDisconnect:= FALSE;
+		(*==================================================================================================================================================================*)
+	1: (* Wait for AbortReq() or ReleaseReq() command completion *)
+		IF ipResult <> 0 THEN
+			ipResult.Execute();
+			IF NOT (bBusy:=ipResult.IsBusy()) THEN
+				state:= SEL(ipResult.IsCompleted(), 100(* failed or aborted *), 0(* succeeded *));
+			END_IF
+		END_IF
+		(*==================================================================================================================================================================*)
+	10: (* connection established *)
+		state:= 0;
+		(*==================================================================================================================================================================*)
+	100: (* Error state *)
+		state:= 0;
+		IF ipResult <> 0 THEN
+			sLastErrorResult:= ipResult.Dump();
+		END_IF
+END_CASE]]></ST>
+    </Implementation>
+    <Property Name="bAbort" Id="{97d8b437-d2c9-47cd-82ea-a6b954c980d6}">
+      <Declaration><![CDATA[PROPERTY bAbort : BOOL]]></Declaration>
+      <Set Name="Set" Id="{ca5258cf-1c1a-4767-8103-8f21380a60dd}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_bAbort:= bAbort;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="bDisconnect" Id="{9c1ed6a7-54ab-4759-9332-5c6b35762260}">
+      <Declaration><![CDATA[PROPERTY bDisconnect : BOOL]]></Declaration>
+      <Set Name="Set" Id="{d6828e8d-2e85-4d8d-995d-35d55ff15c90}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_bDisconnect:= bDisconnect;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="OnAbortInd" Id="{3f571836-fd18-4535-a54e-fd567c3a0ce9}">
+      <Declaration><![CDATA[(* This method receives IEC61850::Abort.ind primitive. *)
+METHOD OnAbortInd
+VAR_INPUT
+	ipAA		: I_ScsmAssociationClass; (* Application association. If = 0 => optional. *)
+	bPAbort		: BOOL; (* TRUE => P-Abort.request(), issued by provider, FALSE => Abort.request(), issued by user. *)
+	ipReason	: I_ServiceErrorClass; (* Abort reason. *)
+	ipData		: I_BaseStreamClass; (* Optional data. If = 0 => default, no data. *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ipReason <> 0 THEN
+	sLastAbortReason:= ipReason.Dump();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnAssociateInd" Id="{5129c690-b655-4fbc-b37f-d6f0501f092f}">
+      <Declaration><![CDATA[(* This method receives IEC61850::Associate.ind primitive. *)
+METHOD OnAssociateInd : BOOL
+VAR_INPUT
+	ipAA			: I_ScsmAssociationClass; (* Application association. If = 0 => optional. *)
+END_VAR
+VAR_OUTPUT
+	ipResult		: I_AsyncServiceResultClass; (* Interface pointer to service state and result information *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[sLastAbortReason:= '';
+sLastErrorResult:= '';
+OnAssociateInd:= fbConnection.AssociateRsp(ipResult=>ipResult);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnReleaseInd" Id="{f690f31c-8611-4010-8e94-ea002193ebee}">
+      <Declaration><![CDATA[(* This method receives IEC61850::Release.ind primitive. *)
+METHOD OnReleaseInd : BOOL
+VAR_INPUT
+	ipAA	: I_ScsmAssociationClass; (* Application association. If = 0 => optional. *)
+END_VAR
+VAR_OUTPUT
+	ipResult: I_AsyncServiceResultClass;
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[OnReleaseInd:= fbConnection.ReleaseRsp(ipResult=>ipResult);]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

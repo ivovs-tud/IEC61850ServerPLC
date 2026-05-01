@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="F_UdintToStringPadded" Id="{cabf02f4-bd91-47f9-805d-5ccd8a693a7d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_UdintToStringPadded : STRING
+VAR_INPUT
+    iValue : UDINT;
+    nWidth : DINT;
+END_VAR
+
+VAR
+    sTemp : STRING(20);
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[sTemp := UDINT_TO_STRING(iValue);
+WHILE LEN(sTemp) < nWidth DO
+    sTemp := CONCAT('0', sTemp);
+END_WHILE
+
+F_UdintToStringPadded := sTemp;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

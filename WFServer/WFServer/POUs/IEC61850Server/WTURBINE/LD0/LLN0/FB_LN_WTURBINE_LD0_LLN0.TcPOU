@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Productversion="">
+  <POU Name="FB_LN_WTURBINE_LD0_LLN0" Id="f13e8685-0627-460d-a574-58a32481b118" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_LN_WTURBINE_LD0_LLN0 EXTENDS FB_AcsiCommonLogicalNodeClass
+VAR_INPUT
+	NamPlt: FB_DO_WTURBINE_LD0_LLN0_NamPlt := (sClass:='LPL', bLinkResult:=THIS^.AddDataToContainer(ipData:=NamPlt));
+	Beh: FB_DO_WTURBINE_LD0_LLN0_Beh := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Beh));
+	Health: FB_DO_WTURBINE_LD0_LLN0_Health := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Health));
+	Mod_: FB_DO_WTURBINE_LD0_LLN0_Mod := (sObjectName:='Mod', sClass:='ENC', bLinkResult:=THIS^.AddDataToContainer(ipData:=Mod_));
+	
+	gocb01: FB_GseGoCBImplClass := (GoID:=(sValue:='WTURBINELD0/LLN0.gocb01'), ConfRev:=(nValue:=10001), DstAddress:=(sAddr:='01-0C-CD-01-00-00', nPRIORITY:=4), bLinkResult:=THIS^.AddGooseControlBlockToContainer(ipGooseControlBlock:=gocb01)); (*Test GOOSE*)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

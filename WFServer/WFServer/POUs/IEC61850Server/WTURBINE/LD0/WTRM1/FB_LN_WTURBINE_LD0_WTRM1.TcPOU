@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Productversion="">
+  <POU Name="FB_LN_WTURBINE_LD0_WTRM1" Id="16d288f4-fbc8-469e-a627-db46578f3689" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_LN_WTURBINE_LD0_WTRM1 EXTENDS FB_AcsiCommonLogicalNodeClass
+VAR_INPUT
+	Beh: FB_DO_WTURBINE_LD0_WTRM1_Beh := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Beh));
+	Vol: FB_DO_WTURBINE_LD0_WTRM1_Vol := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=Vol));
+	Hz: FB_DO_WTURBINE_LD0_WTRM1_Hz := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=Hz));
+	W: FB_DO_WTURBINE_LD0_WTRM1_W := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=W));
+	VAr_: FB_DO_WTURBINE_LD0_WTRM1_VAr := (sObjectName:='VAr', sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=VAr_));
+	TmpWdg: FB_DO_WTURBINE_LD0_WTRM1_TmpWdg := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=TmpWdg));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

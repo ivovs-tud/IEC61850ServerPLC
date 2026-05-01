@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_DirectControl" Id="{8abb49d2-416a-4f46-a7e9-e261ec845fe0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DirectControl EXTENDS FB_Control
+VAR
+	_eControlState: E_DirectControlState; (*State of control state machine*)
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Execute" Id="{e7d6db85-bc78-4dcd-86cf-8467b6e91a80}">
+      <Declaration><![CDATA[METHOD Execute : BOOL
+VAR
+	bTestOk: BOOL; (*Used to cache the return value of the last '_OperativeTest' or '_DynamicTest' method call*)
+	eError: E_AcsiServiceError; (*Used to cache the returned error of the last '_OperativeTest' or '_DynamicTest' method call*)
+	tValue: T_UtcTime; (*Used to cache the current system time for 'tOpOk'*)
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (_ipCtrl <> 0) AND_THEN (_ipCtrl.ipOper <> 0) THEN
+	(* Initialize function block in the first cycle *)
+	IF NOT bInit THEN
+		_Init();
+		bInit:=TRUE;
+	END_IF
+
+	CASE _eControlState OF
+		E_DirectControlState.Ready:
+			(* Check if ControlState changed in the last cycle *)
+			IF bNewState THEN
+				bNewState:=FALSE;
+				_Reset();
+			END_IF
+			(* Check if a valid Oper_req was received *)
+			IF bOperReq THEN
+				bOperReq:=FALSE;
+				(* Go to next ControlState *)
+				_eControlState:=E_DirectControlState.PerformTest;
+				bNewState:=TRUE;
+			END_IF
+
+		E_DirectControlState.PerformTest:
+			(* Check if ControlState changed in the last cycle *)
+			IF bNewState THEN
+				bNewState:=FALSE;
+				(* Set 'opRcvd' *)
+				IF (_ipCtrl.ipOpRcvd <> 0) THEN
+					_ipCtrl.ipOpRcvd.bValue:=TRUE;
+				END_IF
+			END_IF
+			(* Trigger the operative test until it is finished *)
+			IF _OperativeTest(bOperativeTestOk=>bTestOk, eError=>eError) THEN
+				(* Reset 'opRcvd' *)
+				IF (_ipCtrl.ipOpRcvd <> 0) THEN
+					_ipCtrl.ipOpRcvd.bValue:=FALSE;
+				END_IF
+				IF bTestOk THEN
+					(* Go to next ControlState *)
+					_eControlState:=E_DirectControlState.WaitForExecution;
+				ELSE
+					fbCompletion.SetCompleted();
+					fbCompletion.eServiceError:=eError;
+					(* Go back to ControlState 'Ready' *)
+					_eControlState:=E_DirectControlState.Ready;
+				END_IF
+				bNewState:=TRUE;
+			END_IF
+
+		E_DirectControlState.WaitForExecution:
+			(* Check if ControlState changed in the last cycle *)
+			IF bNewState THEN
+				bNewState:=FALSE;
+			END_IF
+			(* Trigger the dynamic test until it is finished *)
+			IF _DynamicTest(bDynamicTestOk=>bTestOk, eError=>eError) THEN
+				fbCompletion.SetCompleted();
+				IF bTestOk THEN
+					(* Go to next ControlState *)
+					IF (_ipBehVal <> 0) AND_THEN ((_ipBehVal.eValue = E_AcsiBeh.TestBlocked) OR_ELSE (_ipBehVal.eValue = E_AcsiBeh.OnBlocked)) THEN
+						_eControlState:=E_DirectControlState.MirrorBlockedCommand;
+					ELSE
+						_eControlState:=E_DirectControlState.Operate;
+					END_IF
+				ELSE
+					fbCompletion.eServiceError:=eError;
+					(* Go back to ControlState 'Ready' *)
+					_eControlState:=E_DirectControlState.Ready;
+				END_IF
+				bNewState:=TRUE;
+			END_IF
+
+		E_DirectControlState.Operate:
+			(* Check if ControlState changed in the last cycle *)
+			IF bNewState THEN
+				bNewState:=FALSE;
+				(* Set 'opOk' *)
+				IF (_ipCtrl.ipOpOk <> 0) THEN
+					_ipCtrl.ipOpOk.bValue:=TRUE;
+				END_IF
+				(* Set 'tOpOk' *)
+				IF (_ipCtrl.ipTOpOk <> 0) AND_THEN (_ipCurrentAA <> 0) AND_THEN (_ipCurrentAA.GetSystemTime(tT=>tValue)) THEN
+					_ipCtrl.ipTOpOk.tValue:=tValue;
+				END_IF
+			END_IF
+			(* Update value *)
+			_SetValue(uCtlVal:=_ipCtrl.ipOper.uCtlVal, ipCtlVal_AV:=_ipCtrl.ipOper.ipCtlVal_AnalogueValue);
+			(* Update Timestamp 't' *)
+			_UpdateTimestampValue(ipAA:=_ipCurrentAA);
+
+			(* Reset 'opOk' *)
+			IF (_ipCtrl.ipOpOk <> 0) THEN
+				_ipCtrl.ipOpOk.bValue:=FALSE;
+			END_IF
+			(* Go back to ControlState 'Ready' *)
+			_eControlState:=E_DirectControlState.Ready;
+			bNewState:=TRUE;
+
+		E_DirectControlState.MirrorBlockedCommand:
+			(* Check if ControlState changed in the last cycle *)
+			IF bNewState THEN
+				bNewState:=FALSE;
+				(* Set 'opOk' *)
+				IF (_ipCtrl.ipOpOk <> 0) THEN
+					_ipCtrl.ipOpOk.bValue:=TRUE;
+				END_IF
+				(* Set 'tOpOk' *)
+				IF (_ipCtrl.ipTOpOk <> 0) AND_THEN (_ipCurrentAA <> 0) AND_THEN (_ipCurrentAA.GetSystemTime(tT=>tValue)) THEN
+					_ipCtrl.ipTOpOk.tValue:=tValue;
+				END_IF
+			END_IF
+			(* Reset 'opOk' *)
+			IF (_ipCtrl.ipOpOk <> 0) THEN
+				_ipCtrl.ipOpOk.bValue:=FALSE;
+			END_IF
+			(* Go back to ControlState 'Ready' *)
+			_eControlState:=E_DirectControlState.Ready;
+			bNewState:=TRUE;
+	END_CASE
+END_IF
+
+(* Monitor transmission of LastApplError *)
+CASE _nLastApplErrorReqState OF
+	0:	RETURN;
+	1:
+		IF (_ipLastApplErrorReq <> 0) THEN
+			Execute:=_ipLastApplErrorReq.Execute();
+			IF NOT _ipLastApplErrorReq.IsBusy() THEN
+				IF _ipLastApplErrorReq.IsCompleted() THEN
+					SUPER^.SetCompleted();
+				ELSE
+					SUPER^.CopyFrom(ipSource:=_ipLastApplErrorReq);
+				END_IF
+				_nLastApplErrorReqState:=0;
+			END_IF
+		END_IF
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnCompletionWaitEvent" Id="{880a5a4f-285a-4fac-aaea-ca25f4d00b33}">
+      <Declaration><![CDATA[METHOD OnCompletionWaitEvent : BOOL
+VAR_INPUT
+	ipDai: I_AcsiDataAccessInfoClass;
+	ipData: I_AcsiCommonDataClass;
+	eFc: E_AcsiFc;
+END_VAR
+VAR_OUTPUT
+	ipResult: I_AcsiServiceResultClass := fbCompletion;
+END_VAR
+VAR
+	eServiceError: E_AcsiServiceError;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbCompletion.SetCompleted();
+IF (ipDai = 0) OR_ELSE (ipData = 0) THEN
+	fbCompletion.eServiceError:=E_AcsiServiceError.AccessViolation;
+	RETURN;
+END_IF
+
+(* Check if an Operate request is received *)
+IF (ipDai.eService = E_AcsiServiceType.SetDataValues) AND_THEN (ipData.sObjectName = 'Oper') THEN
+	ScsmAssociation_From_Dai(in:=ipDai, out=>_ipCurrentAA);
+	fbCompletion.SetBusy();
+	bOperReq:=TRUE;
+	OnCompletionWaitEvent:=TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnSetVPreEvent" Id="{a1ec9c7e-4823-4ad7-8a44-093ed3cf6149}">
+      <Declaration><![CDATA[(*Implementation of user application data update event method.*)
+METHOD OnSetVPreEvent : E_AcsiServiceError
+VAR_INPUT
+	ipDai: I_AcsiDataAccessInfoClass; (*Additional data access info*)
+	ipMemory: I_AnyMemoryBuffer; (*Interface pointer to buffer containig new value data*)
+	ipData: I_AcsiCommonDataClass; (*Interface pointer to data object*)
+	eFc: E_AcsiFc; (*Functional constraint*)
+END_VAR
+VAR_OUTPUT
+	ipLastApplError: I_AcsiDATypeLastApplError; (*IF <> 0 => send LastApplError request*)
+END_VAR
+VAR
+	ipAA: I_ScsmAssociationClass; (*Interface pointer to application association*)
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (eFc = E_AcsiFc.CO) AND_THEN (_ipCtrl <> 0) AND_THEN (ipDai <> 0) AND_THEN (ipDai.Write) AND_THEN (ipDai.ipAccessData <> 0) AND_THEN ScsmAssociation_From_Dai(in:=ipDai, out=>ipAA) THEN
+	IF (_ipCtrl.ipOper <> 0) AND_THEN (_ipCtrl.ipOper.ipOrigin <> 0) AND_THEN (_ipCtrl.ipOper.ipCtlNum <> 0) THEN
+		(* Check for invalid write attemps to prevent 'Oper' from being overwritten while a control request is being executed *)
+		IF (ipDai.ipAccessData.sObjectName = 'Oper') THEN
+			(* Only allow 'Oper' requests in state 'Ready' *)
+			IF (_eControlState <> E_DirectControlState.Ready) THEN
+				ipLastApplError:=ipAA.SetAdditionalCauseDiag(ipCtrlData:=_ipCtrl.ipOper, eError:=E_AcsiApplError.NoError, stOrigin:=_ipCtrl.ipOper.ipOrigin.stOrigin, nCtlNum:=_ipCtrl.ipOper.ipCtlNum.nValue, eAddCause:=E_AcsiApplAddCause.CommandAlreadyInExecution);
+				OnSetVPreEvent:=E_AcsiServiceError.AccessViolation;
+			END_IF
+		ELSE
+			(* Don't allow write access to subdata of 'Oper' *)
+			ipLastApplError:=ipAA.SetAdditionalCauseDiag(ipCtrlData:=_ipCtrl.ipOper, eError:=E_AcsiApplError.NoError, stOrigin:=_ipCtrl.ipOper.ipOrigin.stOrigin, nCtlNum:=_ipCtrl.ipOper.ipCtlNum.nValue, eAddCause:=E_AcsiApplAddCause.NotSupported);
+			OnSetVPreEvent:=E_AcsiServiceError.AccessViolation;
+		END_IF
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

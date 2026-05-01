@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Productversion="">
+  <POU Name="FB_LN_WTURBINE_LD0_WTUR1" Id="7d2250c2-60fc-4813-b630-84aa05eba4c6" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_LN_WTURBINE_LD0_WTUR1 EXTENDS FB_AcsiCommonLogicalNodeClass
+VAR_INPUT
+	Beh: FB_DO_WTURBINE_LD0_WTUR1_Beh := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Beh));
+	W: FB_DO_WTURBINE_LD0_WTUR1_W := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=W));
+	TurSt: FB_DO_WTURBINE_LD0_WTUR1_TurSt := (sClass:='STV', bLinkResult:=THIS^.AddDataToContainer(ipData:=TurSt));
+	TotWh: FB_DO_WTURBINE_LD0_WTUR1_TotWh := (sClass:='CTE', bLinkResult:=THIS^.AddDataToContainer(ipData:=TotWh));
+	StrCnt: FB_DO_WTURBINE_LD0_WTUR1_StrCnt := (sClass:='CTE', bLinkResult:=THIS^.AddDataToContainer(ipData:=StrCnt));
+	StopCnt: FB_DO_WTURBINE_LD0_WTUR1_StopCnt := (sClass:='CTE', bLinkResult:=THIS^.AddDataToContainer(ipData:=StopCnt));
+	ErrorSt: FB_DO_WTURBINE_LD0_WTUR1_ErrorSt := (sClass:='SPS', bLinkResult:=THIS^.AddDataToContainer(ipData:=ErrorSt));
+	CmdBlk: FB_DO_WTURBINE_LD0_WTUR1_CmdBlk := (sClass:='SPC', bLinkResult:=THIS^.AddDataToContainer(ipData:=CmdBlk));
+	TurOp: FB_DO_WTURBINE_LD0_WTUR1_TurOp := (sClass:='CMD', bLinkResult:=THIS^.AddDataToContainer(ipData:=TurOp));
+	DmdWSpt: FB_DO_WTURBINE_LD0_WTUR1_DmdWSpt := (sClass:='SPV', bLinkResult:=THIS^.AddDataToContainer(ipData:=DmdWSpt));
+	TurCtl: FB_DO_WTURBINE_LD0_WTUR1_TurCtl := (sClass:='CMD', bLinkResult:=THIS^.AddDataToContainer(ipData:=TurCtl));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

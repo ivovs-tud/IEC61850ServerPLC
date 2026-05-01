@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_CtlMd" Id="{6d92c20a-6f52-499d-96e5-26b064bf755c}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_explicit_call' := 'Direct call not allowed for type FB_CtlMd'}
+{attribute 'call_after_init'}
+FUNCTION_BLOCK FB_CtlMd EXTENDS FB_AcsiBATypeENUMERATED
+VAR
+	_eValue: E_CtlMd;
+	_eConfig: E_CtlMd;
+	{attribute 'hide'}
+	ipInit: I_AcsiCommonAttributeClass := THIS^.AddDAValue(eP:=E_AcsiP.Actual, in:=_eValue).AddDAValue(eP:=E_AcsiP.Config, in:=_eConfig).AddDAType(in:=THIS^.T(in:=E_AcsiBasicType.INT8));
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="eConfig" Id="{132bd0ba-08d1-4a42-9489-0bd2952f1561}">
+      <Declaration><![CDATA[PROPERTY eConfig : E_CtlMd]]></Declaration>
+      <Get Name="Get" Id="{43540923-db2c-434a-bb53-6a4100e7441e}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eConfig:= _eConfig;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="eValue" Id="{b2621db4-0a40-4000-b5f5-7f617dd02a2c}">
+      <Declaration><![CDATA[PROPERTY eValue : E_CtlMd]]></Declaration>
+      <Get Name="Get" Id="{ffb3fd59-c85f-47de-8d4d-0a2d6ac2a6c9}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eValue:= _eValue;
+OnGetVPropEvt();]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{1a26da80-18f8-4afe-9d35-77cad208f370}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_bChanged:= _eValue <> eValue;
+_eValue:= eValue;
+OnSetVPropEvt(bChanged := _bChanged);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

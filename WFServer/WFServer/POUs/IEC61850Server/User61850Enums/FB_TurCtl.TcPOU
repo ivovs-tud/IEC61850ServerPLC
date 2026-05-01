@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_TurCtl" Id="{8ffe8840-0404-4177-b001-afde18597c30}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_explicit_call' := 'Direct call not allowed for type FB_TurCtl'}
+{attribute 'call_after_init'}
+FUNCTION_BLOCK FB_TurCtl EXTENDS FB_AcsiBATypeENUMERATED
+VAR
+	_eValue: E_TurCtl;
+	_eConfig: E_TurCtl;
+	{attribute 'hide'}
+	ipInit: I_AcsiCommonAttributeClass := THIS^.AddDAValue(eP:=E_AcsiP.Actual, in:=_eValue).AddDAValue(eP:=E_AcsiP.Config, in:=_eConfig).AddDAType(in:=THIS^.T(in:=E_AcsiBasicType.INT8));
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="eConfig" Id="{f81479d6-e285-4fde-91d8-d6dbec33e6aa}">
+      <Declaration><![CDATA[PROPERTY eConfig : E_TurCtl]]></Declaration>
+      <Get Name="Get" Id="{e3e7eaca-3967-4353-b394-8d8cd6941113}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eConfig:= _eConfig;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="eValue" Id="{5ec521aa-5004-454d-8016-4e51195c5f90}">
+      <Declaration><![CDATA[PROPERTY eValue : E_TurCtl]]></Declaration>
+      <Get Name="Get" Id="{052ef588-bd1a-45b9-a9ec-c2c196ed1297}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eValue:= _eValue;
+OnGetVPropEvt();]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{308b74e6-1d61-4b24-b0fc-a695d26c63c1}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_bChanged:= _eValue <> eValue;
+_eValue:= eValue;
+OnSetVPropEvt(bChanged := _bChanged);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

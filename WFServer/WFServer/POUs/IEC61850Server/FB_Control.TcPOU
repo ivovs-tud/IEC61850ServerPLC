@@ -1,0 +1,922 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Control" Id="{548f8b7b-b58e-41aa-bfcc-95c4a03b1f91}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Control EXTENDS FB_AsyncServiceResultClass IMPLEMENTS I_AcsiDataAccessEventClass, I_AcsiDataAccessCompletionClass
+VAR
+	_ipCtrl: I_AcsiCommonControllableDataClass; (* Interface pointer to controllable DO *)
+	_eType: E_AcsiCDCType; (* CDC type of the controllable DO *)
+	_ipBehVal: I_AcsiDATypeBeh; (* Interface pointer to value of 'Beh' DO of parent LN *)
+	_ipStepSize: I_AcsiDATypeAnalogueValue; (* Interface pointer to DO containing stepsize information for BAC *)
+	_ipCurrentAA: I_ScsmAssociationClass; (* Interface pointer to association for the current control procedure *)
+	_stCurrrentIp: ST_SockAddr; (* IP address of the client for the current control procedure *)
+	_ipLastApplErrorReq:  I_AsyncServiceResultClass; (*Interface pointer to LastApplError request service *)
+	_nLastApplErrorReqState: BYTE; (* State of LastApplError transmission *)
+	_ipCmdTermReq: I_AsyncServiceResultClass; (* Interface pointer to CommandTermination request service *)
+	_nCmdTermReqState: BYTE; (* State of CommandTermination transmission *)
+	bInit: BOOL; (* Indicates whether this function block has been initialized *)
+	bNewState: BOOL; (* Indicates whether the ControlState changed in the last cycle *)
+	bOperReq: BOOL; (* Indicates whether a valid Oper_req was received *)
+	bSelReq: BOOL; (* Indicates whether a valid Sel_req was received *)
+	bSelValReq: BOOL; (* Indicates whether a valid SelVal_req was received *)
+	bCancelReq: BOOL; (* Indicates whether a valid Cancel_req was received *)
+	fbCompletion: FB_AcsiServiceResultClass; (* Token for CompletionWaitEvent *)
+	fbOperCompletion: FB_AcsiServiceResultClass; (* Token for CompletionWaitEvent of Oper_req *)
+	fbSelValCompletion: FB_AcsiServiceResultClass; (* Token for CompletionWaitEvent of SelVal_req *)
+	fbCancelCompletion: FB_AcsiServiceResultClass; (* Token for CompletionWaitEvent of Cancel_req *)
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="_CheckCtlVal" Id="{5735ee65-ab79-481d-9e03-5b3b0a386297}">
+      <Declaration><![CDATA[(* Checks if the value of 'Oper.ctlVal' is valid.
+	Return value: TRUE => Value is valid; FALSE => Value is invalid. *)
+METHOD PROTECTED _CheckCtlVal : BOOL
+VAR_INPUT
+	uCtlVal: U_AcsiCtlVal; (* Value of 'ctlVal' DA *)
+END_VAR
+VAR_OUTPUT
+	eError: E_AcsiApplError; (* Error *)
+	eAddCause: E_AcsiApplAddCause; (* Application error code *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (_ipCtrl = 0) OR_ELSE (_eType = E_AcsiCDCType.none) THEN
+	RETURN;
+END_IF
+
+CASE _eType OF
+	E_AcsiCDCType.SPC:
+		IF _ipCtrl.ipStVal_BOOLEAN = 0 THEN
+			RETURN;
+		END_IF
+		IF uCtlVal.SPC = _ipCtrl.ipStVal_BOOLEAN.bValue THEN
+			eError:= E_AcsiApplError.NoError;
+			eAddCause:= E_AcsiApplAddCause.PositionReached;
+		ELSE
+			_CheckCtlVal:= TRUE;
+		END_IF
+
+	E_AcsiCDCType.DPC:
+		IF _ipCtrl.ipStVal_Dbpos = 0 THEN
+			RETURN;
+		END_IF
+		IF (SEL(uCtlVal.DPC, E_AcsiDbpos.Off, E_AcsiDbpos.On)) = _ipCtrl.ipStVal_Dbpos.eValue THEN
+			eError:= E_AcsiApplError.NoError;
+			eAddCause:= E_AcsiApplAddCause.PositionReached;
+		ELSE
+			_CheckCtlVal:= TRUE;
+		END_IF
+
+	E_AcsiCDCType.INC:
+		IF _ipCtrl.ipStVal_INT32 = 0 THEN
+			RETURN;
+		END_IF
+		IF uCtlVal.INC = _ipCtrl.ipStVal_INT32.iValue THEN
+			eError:= E_AcsiApplError.NoError;
+			eAddCause:= E_AcsiApplAddCause.PositionReached;
+		ELSE
+			_CheckCtlVal:= TRUE;
+		END_IF
+
+	E_AcsiCDCType.ENC:
+		IF _ipCtrl.ipStVal_ENUMERATED = 0 THEN
+			RETURN;
+		END_IF
+		IF uCtlVal.ENC.iAny = _ipCtrl.ipStVal_ENUMERATED.iAny THEN
+			eError:= E_AcsiApplError.NoError;
+			eAddCause:= E_AcsiApplAddCause.PositionReached;
+		ELSE
+			_CheckCtlVal:= TRUE;
+		END_IF
+
+	E_AcsiCDCType.BSC:
+		IF _ipCtrl.ipValWTr = 0 THEN
+			RETURN;
+		END_IF
+		CASE uCtlVal.BSC OF
+			E_AcsiTcmd.Reserved:
+				eError:= E_AcsiApplError.NoError;
+				eAddCause:= E_AcsiApplAddCause.PositionReached;
+
+			E_AcsiTcmd.Lower:
+				IF _ipCtrl.ipValWTr.iPosVal = -64 THEN
+					eError:= E_AcsiApplError.NoError;
+					eAddCause:= E_AcsiApplAddCause.StepLimit;
+				ELSE
+					_CheckCtlVal:= TRUE;
+				END_IF
+
+			E_AcsiTcmd.Higher:
+				IF _ipCtrl.ipValWTr.iPosVal = 63 THEN
+					eError:= E_AcsiApplError.NoError;
+					eAddCause:= E_AcsiApplAddCause.StepLimit;
+				ELSE
+					_CheckCtlVal:= TRUE;
+				END_IF
+
+			E_AcsiTcmd.Stop:
+				_CheckCtlVal:= TRUE;
+		END_CASE
+
+	E_AcsiCDCType.ISC:
+		IF _ipCtrl.ipValWTr = 0 THEN
+			RETURN;
+		END_IF
+		IF (uCtlVal.ISC < -64) OR_ELSE (uCtlVal.ISC > 63) THEN
+			eError:= E_AcsiApplError.NoError;
+			eAddCause:= E_AcsiApplAddCause.InconsistentParameters;
+		ELSE
+			_CheckCtlVal:= TRUE;
+		END_IF
+
+	E_AcsiCDCType.APC:
+		IF _ipCtrl.ipMxVal = 0 THEN
+			RETURN;
+		ELSE
+			_CheckCtlVal:= TRUE;
+		END_IF
+
+	E_AcsiCDCType.BAC:
+		IF _ipCtrl.ipMxVal = 0 THEN
+			RETURN;
+		ELSE
+			CASE uCtlVal.BAC OF
+				E_AcsiTcmd.Reserved:
+					eError:= E_AcsiApplError.NoError;
+					eAddCause:= E_AcsiApplAddCause.NotSupported;
+
+				ELSE
+					_CheckCtlVal:= TRUE;
+			END_CASE
+		END_IF
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_CompareCtlVal" Id="{c1b91ba8-3b27-4624-b549-dbdbd375a471}">
+      <Declaration><![CDATA[(* Checks if the values of two 'ctlVal' are equal.
+Return value: TRUE => Values are equal; FALSE => Values are unequal. *)
+METHOD PROTECTED _CompareCtlVal : BOOL
+VAR_INPUT
+	uCtlVal1: U_AcsiCtlVal; (* Value of first 'ctlVal' *)
+	uCtlVal2: U_AcsiCtlVal; (* Value of second 'ctlVal' *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE _eType OF
+	E_AcsiCDCType.SPC:
+		_CompareCtlVal:= uCtlVal1.SPC = uCtlVal2.SPC;
+
+	E_AcsiCDCType.DPC:
+		_CompareCtlVal:= uCtlVal1.DPC = uCtlVal2.DPC;
+
+	E_AcsiCDCType.INC:
+		_CompareCtlVal:= uCtlVal1.INC = uCtlVal2.INC;
+
+	E_AcsiCDCType.ENC:
+		_CompareCtlVal:= uCtlVal1.ENC.iAny = uCtlVal2.ENC.iAny;
+
+	E_AcsiCDCType.BSC:
+		_CompareCtlVal:= uCtlVal1.BSC = uCtlVal2.BSC;
+
+	E_AcsiCDCType.ISC:
+		_CompareCtlVal:= uCtlVal1.ISC = uCtlVal2.ISC;
+
+	E_AcsiCDCType.APC:
+		_CompareCtlVal:= (uCtlVal1.APC.f = uCtlVal2.APC.f) AND_THEN (uCtlVal1.APC.i = uCtlVal2.APC.i);
+
+	E_AcsiCDCType.BAC:
+		_CompareCtlVal:= uCtlVal1.BAC = uCtlVal2.BAC;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_DynamicTest" Id="{d19b8225-4f1d-430f-be44-98c6259c0d7b}">
+      <Declaration><![CDATA[(* This method performs the operative test.
+Since this test can take multiple PLC cycles, this method is called every cycle, until it returns TRUE. *)
+METHOD PROTECTED _DynamicTest : BOOL
+VAR_OUTPUT
+	bDynamicTestOk: BOOL; (* Indicates whether the dynamic test was successful *)
+	eError: E_AcsiServiceError; (* Error code for negative response *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bDynamicTestOk:= TRUE;
+_DynamicTest:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_Init" Id="{20e1e5ec-0c8b-44ee-9b13-297818881d27}">
+      <Declaration><![CDATA[(* Initializes the necessary local values. *)
+METHOD PROTECTED _Init
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _ipCtrl <> 0 THEN
+	(* Set '_eType' according to CDC of the controllable data object *)
+	IF _ipCtrl.sClass = 'SPC' THEN
+		_eType:= E_AcsiCDCType.SPC;
+	ELSIF _ipCtrl.sClass = 'DPC' THEN
+		_eType:= E_AcsiCDCType.DPC;
+	ELSIF _ipCtrl.sClass = 'INC' THEN
+		_eType:= E_AcsiCDCType.INC;
+	ELSIF _ipCtrl.sClass = 'ENC' THEN
+		_eType:= E_AcsiCDCType.ENC;
+	ELSIF _ipCtrl.sClass = 'BSC' THEN
+		_eType:= E_AcsiCDCType.BSC;
+	ELSIF _ipCtrl.sClass = 'ISC' THEN
+		_eType:= E_AcsiCDCType.ISC;
+	ELSIF _ipCtrl.sClass = 'APC' THEN
+		_eType:= E_AcsiCDCType.APC;
+	ELSIF _ipCtrl.sClass = 'BAC' THEN
+		_eType:= E_AcsiCDCType.BAC;
+	END_IF
+	(* Get '_ipBehVal' *)
+	IF _ipBehVal = 0 THEN
+		_ipBehVal:= _ipCtrl.GetBehVal();
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_OperativeTest" Id="{a8023dfa-a863-4acb-b996-608a620a1cf7}">
+      <Declaration><![CDATA[(* This method performs the operative test.
+Since this test can take multiple PLC cycles, this method is called every cycle, until it returns TRUE. *)
+METHOD PROTECTED _OperativeTest : BOOL
+VAR_OUTPUT
+	bOperativeTestOk: BOOL; (* Indicates whether the operative test was successful *)
+	eError: E_AcsiServiceError; (* Error code for negative response *)
+END_VAR
+VAR
+	eApplError: E_AcsiApplError;
+	eApplAddCause: E_AcsiApplAddCause;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (_ipCtrl <> 0) AND_THEN (_ipCtrl.ipOper <> 0) THEN
+	(* Don't allow Oper_req if 'ctlModel' is set to 'status-only' *)
+	IF (_ipCtrl.ipCtlModel <> 0) AND_THEN (_ipCtrl.ipCtlModel.eValue = E_AcsiCtlModels.StatusOnly) THEN
+		_SendLastApplError(ipAA:=_ipCurrentAA, ipCtrlData:=_ipCtrl.ipOper, eError:=E_AcsiApplError.NoError, ipOrigin:=_ipCtrl.ipOper.ipOrigin, ipCtlNum:=_ipCtrl.ipOper.ipCtlNum, eAddCause:=E_AcsiApplAddCause.Unknown);
+		eError:= E_AcsiServiceError.AccessViolation;
+		(* Check if Oper_req is valid for current value of 'Beh' *)
+	ELSIF (_ipBehVal <> 0) AND_THEN ((_ipBehVal.eValue = E_AcsiBeh.Off) OR_ELSE ((_ipCtrl.ipOper.ipTest <> 0) AND_THEN (_ipCtrl.ipOper.ipTest.bValue <> ((_ipBehVal.eValue = E_AcsiBeh.Test) OR_ELSE (_ipBehVal.eValue = E_AcsiBeh.TestBlocked))))) THEN
+		_SendLastApplError(ipAA:=_ipCurrentAA, ipCtrlData:=_ipCtrl.ipOper, eError:=E_AcsiApplError.NoError, ipOrigin:=_ipCtrl.ipOper.ipOrigin, ipCtlNum:=_ipCtrl.ipOper.ipCtlNum, eAddCause:=E_AcsiApplAddCause.BlockedByMode);
+		eError:= E_AcsiServiceError.AccessViolation;
+		(* Check if 'ctlVal' is valid *)
+	ELSIF NOT _CheckCtlVal(uCtlVal:=_ipCtrl.ipOper.uCtlVal, eError=>eApplError, eAddCause=>eApplAddCause) THEN
+		_SendLastApplError(ipAA:=_ipCurrentAA, ipCtrlData:=_ipCtrl.ipOper, eError:=eApplError, ipOrigin:=_ipCtrl.ipOper.ipOrigin, ipCtlNum:=_ipCtrl.ipOper.ipCtlNum, eAddCause:=eApplAddCause);
+		eError:= E_AcsiServiceError.AccessViolation;
+	ELSE (* Oper_req is valid *)
+		RemoteAddress_From_ScsmAssociation(in:=_ipCurrentAA, out=>_stCurrrentIp);
+		bOperativeTestOk:= TRUE;
+	END_IF
+END_IF
+_OperativeTest:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_Reset" Id="{405186c0-37e8-4dbf-8556-8ce0296dd441}">
+      <Declaration><![CDATA[(* Resets all local values. *)
+METHOD PROTECTED _Reset
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(* Reset local values *)
+_ipCurrentAA:= 0;
+_stCurrrentIp.sAddr:= '';
+_stCurrrentIp.nPort:= 0;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_ResetCancelValues" Id="{68d549a2-1f7d-407c-ab1b-6415a47090aa}">
+      <Declaration><![CDATA[(* Resets all values of the 'Cancel' DA to their configured initial values. *)
+METHOD _ResetCancelValues
+VAR
+	ipCancel: I_AcsiDATypeCancel; (* Interface pointer to 'Cancel' DA *)
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (_ipCtrl = 0) OR_ELSE ((ipCancel:=_ipCtrl.ipCancel) = 0) THEN
+	RETURN;
+END_IF
+
+IF ipCancel.ipCtlVal <> 0 THEN
+	ipCancel.uCtlVal:= ipCancel.uCtlVal_Config;
+END_IF
+IF ipCancel.ipOperTm <> 0 THEN
+	ipCancel.ipOperTm.tValue:= ipCancel.ipOperTm.tConfig;
+END_IF
+IF ipCancel.ipOrigin <> 0 THEN
+	ipCancel.ipOrigin.stOrigin:= ipCancel.ipOrigin.stConfig;
+END_IF
+IF ipCancel.ipCtlNum <> 0 THEN
+	ipCancel.ipCtlNum.nValue:= ipCancel.ipCtlNum.nConfig;
+END_IF
+IF ipCancel.ipT <> 0 THEN
+	ipCancel.ipT.tValue:= ipCancel.ipT.tConfig;
+END_IF
+IF ipCancel.ipTest <> 0 THEN
+	ipCancel.ipTest.bValue:= ipCancel.ipTest.bConfig;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_ResetOperValues" Id="{fec956e3-139c-4c24-ae41-510e6aa226bf}">
+      <Declaration><![CDATA[(* Resets all values of the 'Oper' DA to their configured initial values. *)
+METHOD PROTECTED _ResetOperValues
+VAR
+	ipOper: I_AcsiDATypeOper; (* Interface pointer to 'Oper' DA *)
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (_ipCtrl = 0) OR_ELSE ((ipOper:=_ipCtrl.ipOper) = 0) THEN
+	RETURN;
+END_IF
+
+IF ipOper.ipCtlVal <> 0 THEN
+	ipOper.uCtlVal:= ipOper.uCtlVal_Config;
+END_IF
+IF ipOper.ipOperTm <> 0 THEN
+	ipOper.ipOperTm.tValue:= ipOper.ipOperTm.tConfig;
+END_IF
+IF ipOper.ipOrigin <> 0 THEN
+	ipOper.ipOrigin.stOrigin:= ipOper.ipOrigin.stConfig;
+END_IF
+IF ipOper.ipCtlNum <> 0 THEN
+	ipOper.ipCtlNum.nValue:= ipOper.ipCtlNum.nConfig;
+END_IF
+IF ipOper.ipT <> 0 THEN
+	ipOper.ipT.tValue:= ipOper.ipT.tConfig;
+END_IF
+IF ipOper.ipTest <> 0 THEN
+	ipOper.ipTest.bValue:= ipOper.ipTest.bConfig;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_ResetSBOwValues" Id="{5014555d-ac38-4d32-817c-abd67fc7d840}">
+      <Declaration><![CDATA[(* Resets all values of the 'SBOw' DA to their configured initial values. *)
+METHOD PROTECTED _ResetSBOwValues
+VAR
+	ipSBOw: I_AcsiDATypeSBOw; (* Interface pointer to 'SBOw' DA *)
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (_ipCtrl = 0) OR_ELSE ((ipSBOw:=_ipCtrl.ipSBOw) = 0) THEN
+	RETURN;
+END_IF
+
+IF ipSBOw.ipCtlVal <> 0 THEN
+	ipSBOw.uCtlVal:= ipSBOw.uCtlVal_Config;
+END_IF
+IF ipSBOw.ipOperTm <> 0 THEN
+	ipSBOw.ipOperTm.tValue:= ipSBOw.ipOperTm.tConfig;
+END_IF
+IF ipSBOw.ipOrigin <> 0 THEN
+	ipSBOw.ipOrigin.stOrigin:= ipSBOw.ipOrigin.stConfig;
+END_IF
+IF ipSBOw.ipCtlNum <> 0 THEN
+	ipSBOw.ipCtlNum.nValue:= ipSBOw.ipCtlNum.nConfig;
+END_IF
+IF ipSBOw.ipT <> 0 THEN
+	ipSBOw.ipT.tValue:= ipSBOw.ipT.tConfig;
+END_IF
+IF ipSBOw.ipTest <> 0 THEN
+	ipSBOw.ipTest.bValue:= ipSBOw.ipTest.bConfig;
+END_IF
+IF ipSBOw.ipCheck <> 0 THEN
+	ipSBOw.ipCheck.eValue:= ipSBOw.ipCheck.eConfig;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SendCommandTerminationReqNeg" Id="{776bec59-27bb-4859-bbb9-faf8e7b5f55e}">
+      <Declaration><![CDATA[(* Sends a negative CommandTermination request. *)
+METHOD PROTECTED _SendCommandTerminationReqNeg : BOOL
+VAR_INPUT
+	ipAA: I_ScsmAssociationClass; (* Interface pointer to application association *)
+	ipCtrlData: I_AcsiCommonDataClass; (* Interface pointer to 'Oper', 'Cancel' or 'SBOw' control object, e.g. 'Relay1/XCBR1.CO.Pos.Oper', 'Relay1/CSWI1.CO.Pos.Cancel', 'Relay1/XCBR1.CO.Pos.SBOw' *)
+	eError: E_AcsiApplError; (* Error *)
+	ipOrigin: I_AcsiDATypeOriginator; (* Interface pointer to 'origin' attribute *)
+	ipCtlNum: I_AcsiBATypeINT8U; (* Interface pointer to 'ctlNum' attribute *)
+	eAddCause: E_AcsiApplAddCause; (* Application error code *)
+END_VAR
+VAR
+	ipLastApplError: I_AcsiDATypeLastApplError;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (ipAA <> 0) AND_THEN (ipCtrlData <> 0) AND_THEN (ipOrigin <> 0) AND_THEN (ipCtlNum <> 0) THEN
+	ipLastApplError:= ipAA.SetAdditionalCauseDiag(ipCtrlData:=ipCtrl, eError:=eError, stOrigin:=ipOrigin.stOrigin, nCtlNum:=ipCtlNum.nValue, eAddCause:=eAddCause);
+	ipAA.CommandTerminationReq(ipCtrlData:=ipCtrlData, ipLastApplError:=ipLastApplError, ipResult=>_ipCmdTermReq);
+	_nCmdTermReqState:= 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SendCommandTerminationReqPos" Id="{6d201dd4-4ac3-4f17-a658-21fcf78796ba}">
+      <Declaration><![CDATA[(* Sends a positive CommandTermination request. *)
+METHOD PROTECTED _SendCommandTerminationReqPos : BOOL
+VAR_INPUT
+	ipAA: I_ScsmAssociationClass; (* Interface pointer to application association *)
+	ipCtrlData: I_AcsiCommonDataClass; (* Interface pointer to 'Oper', 'Cancel' or 'SBOw' control object, e.g. 'Relay1/XCBR1.CO.Pos.Oper', 'Relay1/CSWI1.CO.Pos.Cancel', 'Relay1/XCBR1.CO.Pos.SBOw' *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (ipAA <> 0) AND_THEN (ipCtrlData <> 0) THEN
+	_SendCommandTerminationReqPos:= ipAA.CommandTerminationReq(ipCtrlData:=ipCtrlData, ipLastApplError:=0, ipResult=>_ipCmdTermReq);
+	_nCmdTermReqState:= 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SendLastApplError" Id="{1e1c4a25-7184-4763-b543-c8b2f3cff46a}">
+      <Declaration><![CDATA[(* Sends a LastApplError request. *)
+METHOD PROTECTED _SendLastApplError : BOOL
+VAR_INPUT
+	ipAA: I_ScsmAssociationClass; (* Interface pointer to application association *)
+	ipCtrlData: I_AcsiCommonDataClass; (* Interface pointer to 'Oper', 'Cancel' or 'SBOw' control object *)
+	eError: E_AcsiApplError; (* Error *)
+	ipOrigin: I_AcsiDATypeOriginator; (* Interface pointer to 'origin' attribute *)
+	ipCtlNum: I_AcsiBATypeINT8U; (* Interface pointer to 'ctlNum' attribute *)
+	eAddCause: E_AcsiApplAddCause; (* Application error code *)
+END_VAR
+VAR
+	ipLastApplError: I_AcsiDATypeLastApplError; (* Interface pointer to AdditionalCauseDiag object *)
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(* Get values from 'Oper' and send LastApplError *)
+IF (ipAA <> 0) AND_THEN (ipOrigin <> 0) AND_THEN (ipCtlNum <> 0) THEN
+	ipLastApplError:= ipAA.SetAdditionalCauseDiag(ipCtrlData:=ipCtrlData, eError:=eError, stOrigin:=ipOrigin.stOrigin, nCtlNum:=ipCtlNum.nValue, eAddCause:=eAddCause);
+
+	_SendLastApplError:= ipAA.LastApplErrorReq(ipLastApplError:=ipLastApplError, ipResult=>_ipLastApplErrorReq);
+	SUPER^.SetBusy();
+	_nLastApplErrorReqState:= 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SetApcValue" Id="{a96e16dc-31d1-42c0-8064-245b530612b4}">
+      <Declaration><![CDATA[(* Sets the value of 'mxVal' to the value of 'ctlVal'.
+Return value: TRUE => Success; FALSE => Failure. *)
+METHOD PROTECTED _SetApcValue : BOOL
+VAR_INPUT
+	ipMxVal: I_AcsiDATypeAnalogueValue; (* Interface pointer to DA that will be written *)
+	uCtlVal: U_AcsiCtlVal; (* Value of 'ctlVal' DA *)
+	ipCtlVal_AV: I_AcsiDATypeAnalogueValue; (* Interface pointer to 'ctlVal' of type AnalogueValue *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ((ipMxVal = 0) OR_ELSE ((ipMxVal.ipF = 0) AND_THEN (ipMxVal.ipI = 0))) OR_ELSE ((ipCtlVal_AV = 0) OR_ELSE ((ipCtlVal_AV.ipF = 0) AND_THEN (ipCtlVal_AV.ipI = 0))) THEN
+	RETURN;
+END_IF
+
+IF ipMxVal.ipF <> 0 THEN
+	IF ipCtlVal_AV.ipF <> 0 THEN
+		ipMxVal.fValue:= uCtlVal.APC.f;
+	ELSE
+		(* 'ctlVal.i' is present, but not 'ctlVal.f' -> convert and use value of 'ctlVal.i' *)
+		ipMxVal.fValue:= DINT_TO_REAL(uCtlVal.APC.i);
+	END_IF
+END_IF
+IF ipMxVal.ipI <> 0 THEN
+	IF ipCtlVal_AV.ipI <> 0 THEN
+		ipMxVal.iValue:= uCtlVal.APC.i;
+	ELSE
+		(* 'ctlVal.if' is present, but not 'ctlVal.i' -> convert and use value of 'ctlVal.f' *)
+		ipMxVal.iValue:= REAL_TO_DINT(uCtlVal.APC.f);
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SetBacValue" Id="{6970d381-0602-4724-976c-83a72ce2b53d}">
+      <Declaration><![CDATA[(* Increments or decrements the value of 'mxVal' according to the value of 'ctlVal' and 'stepSize'.
+If 'stepSize' is not specified, the value 1 is used.
+Return value: TRUE => Success; FALSE => Failure. *)
+METHOD PROTECTED _SetBacValue : BOOL
+VAR_INPUT
+	ipMxVal: I_AcsiDATypeAnalogueValue; (* Interface pointer to DA that will be written *)
+	uCtlVal: U_AcsiCtlVal; (* Value of 'ctlVal' DA *)
+	ipStepSize: I_AcsiDATypeAnalogueValue; (* Interface pointer to 'stepSize' DA (Optional) *)
+END_VAR
+VAR
+	fStepSize: REAL := 1; (* stepSize for 'f' *)
+	iStepSize: DINT := 1; (* stepSize for 'i' *)
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (ipMxVal = 0) OR_ELSE ((ipMxVal.ipF = 0) AND_THEN (ipMxVal.ipI = 0)) THEN
+	RETURN;
+END_IF
+
+IF (ipStepSize <> 0) AND_THEN (((ipStepSize.ipF <> 0) AND_THEN (ipStepSize.fValue <> 0.0)) OR_ELSE ((ipStepSize.ipI <> 0) AND_THEN (ipStepSize.iValue <> 0))) THEN
+	IF ipStepSize.ipF <> 0 THEN
+		fStepSize:= ipStepSize.fValue;
+	ELSE
+		(* 'stepSize.i' is present, but not 'stepSize.f' -> convert and use value of 'stepSize.i' *)
+		fStepSize:= DINT_TO_REAL(ipStepSize.iValue);
+	END_IF
+	IF ipStepSize.ipI <> 0 THEN
+		iStepSize:= ipStepSize.iValue;
+	ELSE
+		(* 'stepSize.f' is present, but not 'stepSize.i' -> convert and use value of 'stepSize.f' *)
+		iStepSize:= REAL_TO_DINT(ipStepSize.fValue);
+	END_IF
+END_IF
+
+CASE uCtlVal.BAC OF
+	E_AcsiTcmd.Stop:
+		_SetBacValue:= TRUE;
+
+	E_AcsiTcmd.Lower:
+		IF ipMxVal.ipF <> 0 THEN
+			ipMxVal.fValue:= ipMxVal.fValue - fStepSize;
+		END_IF
+		IF ipMxVal.ipI <> 0 THEN
+			ipMxVal.iValue:= ipMxVal.iValue - iStepSize;
+		END_IF
+		_SetBacValue:= TRUE;
+
+	E_AcsiTcmd.Higher:
+		IF ipMxVal.ipF <> 0 THEN
+			ipMxVal.fValue:= ipMxVal.fValue + fStepSize;
+		END_IF
+		IF ipMxVal.ipI <> 0 THEN
+			ipMxVal.iValue:= ipMxVal.iValue + iStepSize;
+		END_IF
+		_SetBacValue:= TRUE;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SetBscValue" Id="{627376d1-e44d-48d3-9cac-d8e972233c9b}">
+      <Declaration><![CDATA[(* Increments or decrements the value of 'valWTr' according to the value of 'ctlVal'.
+Return value: TRUE => Success; FALSE => Failure. *)
+METHOD PROTECTED _SetBscValue : BOOL
+VAR_INPUT
+	ipValWTr: I_AcsiDATypeValWithTrans; (* Interface pointer to DA that will be written *)
+	uCtlVal: U_AcsiCtlVal; (* Value of 'ctlVal' DA *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ipValWTr = 0 THEN
+	RETURN;
+END_IF
+
+CASE uCtlVal.BSC OF
+	E_AcsiTcmd.Stop:
+		_SetBscValue:= TRUE;
+
+	E_AcsiTcmd.Lower:
+		ipValWTr.iPosVal:= ipValWTr.iPosVal - 1;
+		_SetBscValue:= TRUE;
+
+	E_AcsiTcmd.Higher:
+		ipValWTr.iPosVal:= ipValWTr.iPosVal + 1;
+		_SetBscValue:= TRUE;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SetDpcValue" Id="{5597688e-aabe-4623-8ced-e38a8482c8a4}">
+      <Declaration><![CDATA[(* Sets the value of 'stVal' according to the value of 'ctlVal'.
+Return value: TRUE => Success; FALSE => Failure. *)
+METHOD PROTECTED _SetDpcValue : BOOL
+VAR_INPUT
+	ipStVal: I_AcsiDATypeDbpos; (* Interface pointer to DA that will be written *)
+	uCtlVal: U_AcsiCtlVal; (* Value of 'ctlVal' DA *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ipStVal = 0 THEN
+	RETURN;
+END_IF
+
+ipStVal.eValue:= SEL(uCtlVal.DPC, E_AcsiDbpos.Off, E_AcsiDbpos.On);
+_SetDpcValue:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SetEncValue" Id="{d01dcdc7-69af-4593-8f8d-34d6aae79659}">
+      <Declaration><![CDATA[(* Sets the value of 'stVal' according to the value of 'ctlVal'.
+Return value: TRUE => Success; FALSE => Failure. *)
+METHOD PROTECTED _SetEncValue : BOOL
+VAR_INPUT
+	ipStVal: I_AcsiBATypeENUMERATED; (* Interface pointer to DA that will be written *)
+	uCtlVal: U_AcsiCtlVal; (* Value of 'ctlVal' DA *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ipStVal = 0 THEN
+	RETURN;
+END_IF
+
+ipStVal.iAny:= uCtlVal.ENC.iAny;
+_SetEncValue:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SetIncValue" Id="{b3262203-e920-4f83-87a1-f79eb210144b}">
+      <Declaration><![CDATA[(* Sets the value of 'stVal' to the value of 'ctlVal'.
+Return value: TRUE => Success; FALSE => Failure. *)
+METHOD PROTECTED _SetIncValue : BOOL
+VAR_INPUT
+	ipStVal: I_AcsiBATypeINT32; (* Interface pointer to DA that will be written *)
+	uCtlVal: U_AcsiCtlVal; (* Value of 'ctlVal' DA *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ipStVal = 0 THEN
+	RETURN;
+END_IF
+
+ipStVal.iValue:= uCtlVal.INC;
+_SetIncValue:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SetIscValue" Id="{cc38cf03-8035-44ba-be81-24227dfa2e12}">
+      <Declaration><![CDATA[(* Sets the value of 'valWTr' to the value of 'ctlVal'.
+Return value: TRUE => Success; FALSE => Failure. *)
+METHOD PROTECTED _SetIscValue : BOOL
+VAR_INPUT
+	ipValWTr: I_AcsiDATypeValWithTrans; (* Interface pointer to DA that will be written *)
+	uCtlVal: U_AcsiCtlVal; (* Value of 'ctlVal' DA *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ipValWTr = 0 THEN
+	RETURN;
+END_IF
+
+ipValWTr.iPosVal:= uCtlVal.ISC;
+_SetIscValue:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SetSpcValue" Id="{5ff60e32-239a-477a-b08a-b9708653a02e}">
+      <Declaration><![CDATA[(* Sets the value of 'stVal' to the value of 'ctlVal'.
+Return value: TRUE => Success; FALSE => Failure. *)
+METHOD PROTECTED _SetSpcValue : BOOL
+VAR_INPUT
+	ipStVal: I_AcsiBATypeBOOLEAN; (* Interface pointer to DA that will be written *)
+	uCtlVal: U_AcsiCtlVal; (* Value of 'ctlVal' DA *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ipStVal = 0 THEN
+	RETURN;
+END_IF
+
+ipStVal.bValue:= uCtlVal.SPC;
+_SetSpcValue:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SetValue" Id="{87fc1402-7f1a-4ea7-b68c-a774993baa6c}">
+      <Declaration><![CDATA[(* Sets the value of the respective DA according to the value of 'Oper.ctlVal'.
+Return value: TRUE => Success, FALSE => Failure. *)
+METHOD PROTECTED _SetValue : BOOL
+VAR_INPUT
+	uCtlVal: U_AcsiCtlVal; (* Value of 'ctlVal' DA *)
+	ipCtlVal_AV: I_AcsiDATypeAnalogueValue; (* Interface pointer to 'ctlVal' of type AnalogueValue *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _ipCtrl = 0 THEN
+	RETURN;
+END_IF
+
+CASE _eType OF
+	E_AcsiCDCType.SPC:
+		_SetValue:= _SetSpcValue(ipStVal:=_ipCtrl.ipStVal_BOOLEAN, uCtlVal:=uCtlVal);
+
+	E_AcsiCDCType.DPC:
+		_SetValue:= _SetDpcValue(ipStVal:=_ipCtrl.ipStVal_Dbpos, uCtlVal:=uCtlVal);
+
+	E_AcsiCDCType.INC:
+		_SetValue:= _SetIncValue(ipStVal:=_ipCtrl.ipStVal_INT32, uCtlVal:=uCtlVal);
+
+	E_AcsiCDCType.ENC:
+		_SetValue:= _SetEncValue(ipStVal:=_ipCtrl.ipStVal_ENUMERATED, uCtlVal:=uCtlVal);
+
+	E_AcsiCDCType.BSC:
+		_SetValue:= _SetBscValue(ipValWTr:=_ipCtrl.ipValWTr, uCtlVal:=uCtlVal);
+
+	E_AcsiCDCType.ISC:
+		_SetValue:= _SetIscValue(ipValWTr:=_ipCtrl.ipValWTr, uCtlVal:=uCtlVal);
+
+	E_AcsiCDCType.APC:
+		_SetValue:= _SetApcValue(ipMxVal:=_ipCtrl.ipMxVal, uCtlVal:=uCtlVal, ipCtlVal_AV:=ipCtlVal_AV);
+
+	E_AcsiCDCType.BAC:
+		_SetValue:= _SetBacValue(ipMxVal:=_ipCtrl.ipMxVal, uCtlVal:=uCtlVal, ipStepSize:=_ipStepSize);
+
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_Test" Id="{402ef940-9cc6-4013-be49-8a6722f88000}">
+      <Declaration><![CDATA[(* This method performs the test of the SelectWithValue operation.
+Since this test can take multiple PLC cycles, this method is called every cycle, until it returns TRUE. *)
+METHOD PROTECTED _Test : BOOL
+VAR_OUTPUT
+	bTestOk: BOOL; (* Indicates whether the test was successful *)
+	eError: E_AcsiServiceError; (* Error code for negative response *)
+END_VAR
+VAR
+	eApplError: E_AcsiApplError; (* Error *)
+	eApplAddCause: E_AcsiApplAddCause; (* Application error code *)
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (_ipCtrl <> 0) AND_THEN (_ipCtrl.ipSBOw <> 0) THEN
+	(* Don't allow control if 'ctlModel' is set to 'status-only' *)
+	IF (_ipCtrl.ipCtlModel <> 0) AND_THEN (_ipCtrl.ipCtlModel.eValue = E_AcsiCtlModels.StatusOnly) THEN
+		_SendLastApplError(ipAA:=_ipCurrentAA, ipCtrlData:=_ipCtrl.ipSBOw, eError:=E_AcsiApplError.NoError, ipOrigin:=_ipCtrl.ipSBOw.ipOrigin, ipCtlNum:=_ipCtrl.ipSBOw.ipCtlNum, eAddCause:=E_AcsiApplAddCause.Unknown);
+		eError:= E_AcsiServiceError.AccessViolation;
+		(* Check if 'ctlVal' is valid *)
+	ELSIF NOT _CheckCtlVal(uCtlVal:=_ipCtrl.ipSBOw.uCtlVal, eError=>eApplError, eAddCause=>eApplAddCause) THEN
+		_SendLastApplError(ipAA:=_ipCurrentAA, ipCtrlData:=_ipCtrl.ipSBOw, eError:=eApplError, ipOrigin:=_ipCtrl.ipSBOw.ipOrigin, ipCtlNum:=_ipCtrl.ipSBOw.ipCtlNum, eAddCause:=eApplAddCause);
+		eError:= E_AcsiServiceError.AccessViolation;
+		(* SelVal_req is valid *)
+	ELSE
+		RemoteAddress_From_ScsmAssociation(in:=_ipCurrentAA, out=>_stCurrrentIp);
+		bTestOk:= TRUE;
+	END_IF
+END_IF
+_Test:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_UpdateTimestampValue" Id="{acab7cc7-b210-432b-a97b-669e2500f962}">
+      <Declaration><![CDATA[(* Sets the value of 't' to the current time.
+Return value: TRUE => Success; FALSE => Failure. *)
+METHOD PROTECTED _UpdateTimestampValue : BOOL
+VAR_INPUT
+	ipAA: I_ScsmAssociationClass; (* Interface pointer to application association *)
+END_VAR
+VAR
+	tValue: T_UtcTime; (* Current time *)
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (ipAA <> 0) AND_THEN (_ipCtrl <> 0) AND_THEN (_ipCtrl.ipT <> 0) THEN
+	_UpdateTimestampValue:= ipAA.GetSystemTime(tT=>tValue);
+	_ipCtrl.ipT.tValue:= tValue;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="eType" Id="{9376b8c5-786f-4b0b-960c-e96b0c0af474}">
+      <Declaration><![CDATA[PROPERTY eType : E_AcsiCDCType]]></Declaration>
+      <Get Name="Get" Id="{04a009b5-5ef0-456d-b19d-43224eee6707}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eType:= _eType;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{4ec860e3-8436-4e5e-b110-af72c4efd62a}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_eType:= eType;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ipBehVal" Id="{19388f06-a3cd-4a7a-9a93-a7a15bfc9110}">
+      <Declaration><![CDATA[PROPERTY ipBehVal : I_AcsiDATypeBeh]]></Declaration>
+      <Get Name="Get" Id="{f6e87ad4-d806-4402-a803-39e626dbebb2}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ipBehVal:= _ipBehVal;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{a617037b-a38a-46a8-9cd6-76ba3e0b9145}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_ipBehVal:= ipBehVal;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ipCtrl" Id="{1362e31b-5f8d-46d7-8f80-0cba4199b795}">
+      <Declaration><![CDATA[PROPERTY ipCtrl : I_AcsiCommonControllableDataClass]]></Declaration>
+      <Get Name="Get" Id="{df4f5795-4782-45cf-baa2-a70aaf8c18af}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ipCtrl:= _ipCtrl;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{e4eb2378-d6e9-4005-83e9-1749bd6552dd}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_ipCtrl:= ipCtrl;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ipStepSize" Id="{4d1c2483-caff-4de1-ae95-ea791a5cfffa}">
+      <Declaration><![CDATA[PROPERTY ipStepSize : I_AcsiDATypeAnalogueValue]]></Declaration>
+      <Get Name="Get" Id="{7a24da1c-75a3-4f49-90ea-901819d470f4}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ipStepSize:= _ipStepSize;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{f614c6b3-cc61-4418-9780-e7f51b944966}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_ipStepSize:= ipStepSize;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="OnAbort" Id="{c1f14b71-9cb9-4d46-9afe-3222c71ef4af}">
+      <Declaration><![CDATA[METHOD OnAbort : BOOL
+VAR_INPUT
+	ipReason: I_ServiceErrorClass;
+END_VAR
+VAR_OUTPUT
+	ipResult: I_AsyncServiceResultClass := THIS^;
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(* Forward Abort to LastApplError request service *)
+IF (_ipLastApplErrorReq <> 0) AND_THEN (_ipLastApplErrorReq.IsBusy()) THEN
+	_ipLastApplErrorReq.OnAbort(ipReason:=ipReason);
+END_IF
+(* Forward Abort to CommandTermination request service *)
+IF (_ipCmdTermReq <> 0) AND_THEN (_ipCmdTermReq.IsBusy()) THEN
+	_ipCmdTermReq.OnAbort(ipReason:=ipReason);
+END_IF
+
+SUPER^.SetCompleted();
+fbCompletion.SetCompleted();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnCompletionWaitEvent" Id="{acd20ed7-c62b-4dd6-acd7-a9c223a6d909}">
+      <Declaration><![CDATA[METHOD OnCompletionWaitEvent : BOOL
+VAR_INPUT
+	ipDai: I_AcsiDataAccessInfoClass;
+	ipData: I_AcsiCommonDataClass;
+	eFc: E_AcsiFc;
+END_VAR
+VAR_OUTPUT
+	ipResult: I_AcsiServiceResultClass := fbCompletion;
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnGetVEvent" Id="{74a8ad36-b9d7-4a87-a30c-e31e2c72d008}">
+      <Declaration><![CDATA[(* Implementation of user application data update event method. *)
+METHOD OnGetVEvent
+VAR_INPUT
+	ipDai: I_AcsiDataAccessInfoClass; (* Additional data access info *)
+	ipData: I_AcsiCommonDataClass; (* Interface pointer to data object *)
+	eFc: E_AcsiFc; (* Functional constraint *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnGetVPreEvent" Id="{9067e6e2-d693-46c2-8f16-dea0fc8441b9}">
+      <Declaration><![CDATA[(* Implementation of user application data update event method. *)
+METHOD OnGetVPreEvent : E_AcsiServiceError
+VAR_INPUT
+	ipDai: I_AcsiDataAccessInfoClass; (* Additional data access info *)
+	ipData: I_AcsiCommonDataClass; (* Interface pointer to data object *)
+	eFc: E_AcsiFc; (* Functional constraint *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnSetVEvent" Id="{6a2430df-53e5-41eb-8ee3-2e571d6444b9}">
+      <Declaration><![CDATA[(* Implementation of user application data update event method. *)
+METHOD OnSetVEvent
+VAR_INPUT
+	ipDai: I_AcsiDataAccessInfoClass; (* Additional data access info *)
+	ipData: I_AcsiCommonDataClass; (* Interface pointer to data object *)
+	eFc: E_AcsiFc; (* Functional constraint *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnSetVPreEvent" Id="{c16c8844-fdd7-4276-8ce9-22957b162a50}">
+      <Declaration><![CDATA[(* Implementation of user application data update event method. *)
+METHOD OnSetVPreEvent : E_AcsiServiceError
+VAR_INPUT
+	ipDai: I_AcsiDataAccessInfoClass; (* Additional data access info *)
+	ipMemory: I_AnyMemoryBuffer; (* Interface pointer to buffer containig new value data *)
+	ipData: I_AcsiCommonDataClass; (* Interface pointer to data object *)
+	eFc: E_AcsiFc; (* Functional constraint *)
+END_VAR
+VAR_OUTPUT
+	ipLastApplError: I_AcsiDATypeLastApplError; (* IF <> 0 => send LastApplError request *)
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

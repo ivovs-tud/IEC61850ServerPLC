@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="P_IEC61850ServerInit" Id="{0af0e9e4-38c1-486d-a1b0-f5236706a8b5}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_IEC61850ServerInit
+VAR
+	i: UDINT;
+	j: UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FOR i := 1 TO c_nNumTurbines DO
+	fbServer[i].ipIED := fbWTURBINE[i];
+	
+	fbServer[i].settings.bEnable := TRUE;
+	fbServer[i].settings.sLocalHost := c_aIpAddr;
+	fbServer[i].settings.nLocalPort := c_aMMSPortBase + i - 1;
+	fbServer[i].settings.sCalled_T_Selector := F_BuildSelector(i);
+	fbServer[i].settings.sCalled_S_Selector := F_BuildSelector(i);
+	fbServer[i].settings.sCalled_P_Selector := CONCAT('00 00 ', F_UdintToStringPadded(i, 2));
+	fbServer[i].settings.sCalled_AP_Title := F_BuildAPTitle(i);
+	fbServer[i].settings.nCalled_AP_InvID := i;
+	fbServer[i].settings.nCalled_AE_InvID := i;
+	fbServer[i].settings.nCalling_AP_InvID := i - 1;
+	fbServer[i].settings.nCalling_AE_InvID := i - 1;
+	
+	FOR j := 1 TO c_nNumSessions DO
+		fbSession[i,j].fbConnection.ipServer := fbServer[i];
+		fbSession[i,j].fbConnection.settings.bEnable := TRUE;
+		fbSession[i,j].nID := i;
+	END_FOR
+END_FOR]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

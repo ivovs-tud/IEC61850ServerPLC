@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_UDPTxStateMachine" Id="{eaa388e7-d7d6-421e-b48b-746a67ef0c5a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_UDPTxStateMachine
+VAR_IN_OUT
+	fbTxFIFO		: FB_UDPFrameFIFO;
+END_VAR
+VAR_INPUT
+	bEnable			: BOOL			:= FALSE;			// TRUE => Enable/connect, FALSE => Disable/disconnect
+	tReconnect		: TIME			:= T#5S;			// Reconnect delay time
+	bLog			: BOOL			:= FALSE;			// TRUE => Enable log message output, FALSE => Disable 
+	sPrefix			: STRING 		:= 'PeerToPeerX::'; // Log message description string (allows the identification of log message source)
+END_VAR
+VAR_OUTPUT
+	bCreated		: BOOL;		// Connectionless socket state (TRUE => created, FALSE => closed)
+END_VAR
+VAR
+	fbCreate		: FB_SocketUdpCreate;
+	fbClose			: FB_SocketClose;
+	fbSendTo		: FB_SocketUdpSendTo;
+	stSendTo		: ST_UDPFrameEntry;
+	fbCreateTimer	: TON := ( PT := T#0S );	
+	eState			: E_UDPClientServerState;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE eState OF
+	(* Idle State *)
+	eUDP_STATE_IDLE:
+		IF bEnable XOR bCreated THEN
+			IF bEnable THEN
+				(* Clear send fifo *)
+				fbTxFIFO.Clear( sPrefix := CONCAT( sPrefix, 'FB_FrameFifo(sender)::' ), bLog := bLog );
+				
+				(* At program start (first time) connect immediately, next time after delay time *)
+				fbCreateTimer( IN := TRUE );
+				IF fbCreateTimer.Q THEN
+					fbCreateTimer( IN := FALSE, PT := tReconnect ); 
+					eState := eUDP_STATE_CREATE_START;
+				END_IF
+			ELSE
+				eState := eUDP_STATE_CLOSE_START;
+			END_IF
+		ELSIF bCreated THEN
+			fbTxFIFO.RemoveHead( stGet => stSendTo );
+			IF fbTxFIFO.bOk THEN
+				eState := eUDP_STATE_SEND_START;
+			END_IF
+		ELSE
+			fbCreateTimer( IN := FALSE, PT := T#0S );
+		END_IF
+	
+	(* Creation States *)
+	eUDP_STATE_CREATE_START:
+		fbCreate( bExecute := FALSE  );
+		fbCreate( sSrvNetId := sSrvNetId, sLocalHost:= sLocalHost, nLocalPort:= nLocalTxPort, bExecute:= TRUE );
+		eState := eUDP_STATE_CREATE_WAIT;
+
+	eUDP_STATE_CREATE_WAIT:
+		fbCreate( bExecute := FALSE );
+		IF NOT fbCreate.bBusy THEN
+			IF NOT fbCreate.bError THEN
+				bCreated := TRUE;
+// 				fbLog.Message( sMessage := 'Connectionless (UDP) socket created!', hSocket := fbCreate.hSocket );
+				eState := eUDP_STATE_IDLE;
+			ELSE
+// 				fbLog.Error( sMessage := 'FB_SocketUdpCreate()', nErrID := fbCreate.nErrID );
+				eState := eUDP_STATE_ERROR;
+			END_IF
+		END_IF
+	
+	(* Sending States *)
+	eUDP_STATE_SEND_START:
+		fbSendTo( bExecute := FALSE );
+		fbSendTo( sSrvNetId := sSrvNetId, sRemoteHost := stSendTo.stRemoteAddr.sAddr,
+					nRemotePort := stSendTo.stRemoteAddr.nPort,
+					pSrc:= ADR( stSendTo.sMessage ),
+					//cbLen:= INT_TO_UDINT(LEN( stSendTo.sMessage )) + 1, (* Include the end delimiter *)
+					cbLen := 64,
+					hSocket:= fbCreate.hSocket, bExecute:= TRUE );
+		eState := eUDP_STATE_SEND_WAIT;
+
+	eUDP_STATE_SEND_WAIT:
+		fbSendTo( bExecute := FALSE );
+		IF NOT fbSendTo.bBusy THEN
+			IF NOT fbSendTo.bError THEN
+				eState := eUDP_STATE_IDLE;
+			ELSE
+// 				fbLog.Error( sMessage := 'FB_SocketUdpSendTo()', nErrID := fbSendTo.nErrID );
+				eState := eUDP_STATE_ERROR;
+			END_IF
+		END_IF
+		
+	(* Closing States *)
+	eUDP_STATE_CLOSE_START:
+// 		fbLog.Message( sMessage := 'Closing connectionless (UDP) socket!', hSocket := fbCreate.hSocket );
+		fbClose( bExecute := FALSE );
+		fbClose( sSrvNetId := sSrvNetId, hSocket := fbCreate.hSocket, bExecute := TRUE );
+		eState := eUDP_STATE_CLOSE_WAIT;
+		
+	eUDP_STATE_CLOSE_WAIT:
+		fbClose( bExecute := FALSE );
+		IF NOT fbClose.bBusy THEN
+			bCreated := FALSE;
+			IF NOT fbClose.bError THEN
+				eState := eUDP_STATE_IDLE;
+			ELSE
+// 				fbLog.Error( sMessage := 'FB_SocketClose()', nErrID := fbClose.nErrID );
+				eState := eUDP_STATE_ERROR;
+			END_IF
+		END_IF
+
+	(* Error State *)
+
+	eUDP_STATE_ERROR: (* Error step *)
+		IF bCreated THEN
+			eState := eUDP_STATE_CLOSE_START;
+		ELSE
+			eState := eUDP_STATE_IDLE;
+		END_IF
+
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

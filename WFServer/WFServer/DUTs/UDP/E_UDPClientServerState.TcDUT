@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_UDPClientServerState" Id="{6c23c9a4-6b89-4175-81c8-c22feb107d72}">
+    <Declaration><![CDATA[TYPE E_UDPClientServerState :
+(
+	eUDP_STATE_IDLE		:= 0,
+	eUDP_STATE_CREATE_START,
+	eUDP_STATE_CREATE_WAIT,
+	eUDP_STATE_SEND_START,
+	eUDP_STATE_SEND_WAIT,
+	eUDP_STATE_RECEIVE_START,
+	eUDP_STATE_RECEIVE_WAIT,
+	eUDP_STATE_CLOSE_START,
+	eUDP_STATE_CLOSE_WAIT,
+	eUDP_STATE_ERROR
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

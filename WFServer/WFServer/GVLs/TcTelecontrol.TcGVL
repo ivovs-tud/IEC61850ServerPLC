@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.2.0.0">
+  <GVL Name="TcTelecontrol" Id="{8500f911-77e0-4c84-bfe8-1db510037f36}">
+    <Declaration><![CDATA[VAR_GLOBAL
+	ipCreator: I_AcsiCodeCreatorClass := GVL_AcsiVars.Creator.SetCodeRev(codeRev:=7).SetGuiVer(major:=3, minor:=98, build:=20, revision:=0);
+	
+	(* IEC61850 Data Models for Turbine *)
+	fbWTURBINE: ARRAY[1..c_nNumTurbines] OF FB_IED_WTURBINE;
+	
+	(* IEC61850 Server Objects, one for each turbine *)
+	fbServer : ARRAY[1..c_nNumTurbines] OF FB_iec61850ServerClass;
+	
+	(* IEC61850 Server Sessions, one or multiple for each server object *)
+	fbSession: ARRAY[1..c_nNumTurbines, 1..c_nNumSessions] OF FB_WTURBINEServerSession;
+	
+// 	{warning 'Please configure your server IP-address in the initialization code of the server function block below:'}
+	(* Server container *)
+// 	fbWTURBINEServer: FB_iec61850ServerClass := (ipIED:=fbWTURBINE, settings:=(bEnable:=TRUE, sLocalHost:='192.168.1.100', nCalled_AP_InvID:=0, nCalling_AP_InvID:=0, nCalled_AE_InvID:=0, nCalling_AE_InvID:=0));
+	
+	(* Server connections *)
+// 	fbWTURBINEServerSession1: FB_WTURBINEServerSession := (fbConnection:=(ipServer:=fbWTURBINEServer, settings:=(bEnable:=TRUE)));
+	(*
+	fbWTURBINEServerSession2: FB_WTURBINEServerSession := (fbConnection:=(ipServer:=fbWTURBINEServer, settings:=(bEnable:=TRUE)));
+	...
+	fbWTURBINEServerSessionN: FB_WTURBINEServerSession := (fbConnection:=(ipServer:=fbWTURBINEServer, settings:=(bEnable:=TRUE)));
+	*)
+	
+	
+// 	fbWTURBINEGse: FB_WTURBINEGse := (fbAdapter:=(ipIED:=fbWTURBINE, settings:=(sMulticastAddr:='01-0C-CD-01-00-00', eDispatchMode:=E_GseDispatchMode.NonPromiscuous)));
+	
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

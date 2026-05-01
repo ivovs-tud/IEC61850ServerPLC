@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_IED_WTURBINE" Id="{77eafbcc-30b8-4adb-8136-2d22311f7c2a}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+{attribute 'call_after_init'}
+FUNCTION_BLOCK FB_IED_WTURBINE EXTENDS FB_AcsiCommonIntelligentElectronicDeviceClass
+VAR_INPUT
+	WTURBINELD0: FB_LD_WTURBINELD0 := (bLinkResult:=THIS^.AddLogicalDeviceToContainer(ipLogicalDevice:=WTURBINELD0));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

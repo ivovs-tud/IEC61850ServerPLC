@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="UDP_TX_MAIN" Id="{ab925253-1a22-45c0-8d27-ff2cc68bbeda}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM UDP_TX_MAIN
+VAR
+	bSendOnceToRemote	: BOOL;
+	bEnable				: BOOL 			:= TRUE;(* TRUE => Enable/connect, FALSE => Disable/disconnect *)
+	bLog				: BOOL			:= TRUE;(* TRUE => Enable log message output, FALSE => Disable *)
+	
+	fbTx				: FB_UDPTxStateMachine := (sPrefix := 'UDP_TX::');
+	stSendTo			: ST_UDPFrameEntry;
+	
+	fbTxFIFO			: FB_UDPFrameFIFO;
+	
+	
+	iTemp_1: BYTE := 1;
+	iTemp_2: BYTE := 2;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbTx(fbTxFifo:=fbTxFIFO, bEnable:=bEnable, bLog:=bLog);
+
+iTemp_1 := iTemp_1 + 1;
+iTemp_2 := iTemp_2+2;
+
+IF fbTx.bCreated THEN
+	IF bSendOnceToRemote THEN
+		bSendOnceToRemote 			:= FALSE;		(* Clear flag *)
+		MEMSET(ADR(stSendTo.sMessage), 0, SIZEOF(stSendto.sMessage));
+		stSendTo.sMessage[1] := INT_TO_BYTE(iTemp_1);
+		stSendTo.sMessage[2] := INT_TO_BYTE(iTemp_2);		
+		stSendTo.stRemoteAddr.sAddr := sRemoteHost;	(* Remote host IP address *)
+		stSendTo.stRemoteAddr.nPort := nRemotePort;	(* Remote host port number *)
+		fbTxFIFO.AddTail( stPut := stSendTo );	(* Add new entry to the send queue *)
+	END_IF
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

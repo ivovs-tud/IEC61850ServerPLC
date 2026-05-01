@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Productversion="">
+  <POU Name="FB_LN_WTURBINE_LD0_WAPC1" Id="c989b87b-2e53-4036-9609-5ac934953859" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_LN_WTURBINE_LD0_WAPC1 EXTENDS FB_AcsiCommonLogicalNodeClass
+VAR_INPUT
+	Beh: FB_DO_WTURBINE_LD0_WAPC1_Beh := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Beh));
+	AvlW: FB_DO_WTURBINE_LD0_WAPC1_AvlW := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=AvlW));
+	WCurTgt: FB_DO_WTURBINE_LD0_WAPC1_WCurTgt := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=WCurTgt));
+	FrzW: FB_DO_WTURBINE_LD0_WAPC1_FrzW := (sClass:='SPS', bLinkResult:=THIS^.AddDataToContainer(ipData:=FrzW));
+	WSetPt: FB_DO_WTURBINE_LD0_WAPC1_WSetPt := (sClass:='SPV', bLinkResult:=THIS^.AddDataToContainer(ipData:=WSetPt));
+	WDeltaSpt: FB_DO_WTURBINE_LD0_WAPC1_WDeltaSpt := (sClass:='SPV', bLinkResult:=THIS^.AddDataToContainer(ipData:=WDeltaSpt));
+	WRmpTgt: FB_DO_WTURBINE_LD0_WAPC1_WRmpTgt := (sClass:='SPV', bLinkResult:=THIS^.AddDataToContainer(ipData:=WRmpTgt));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

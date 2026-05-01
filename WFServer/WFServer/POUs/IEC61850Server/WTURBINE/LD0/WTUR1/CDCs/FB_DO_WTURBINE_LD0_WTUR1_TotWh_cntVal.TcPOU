@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Productversion="">
+  <POU Name="FB_DO_WTURBINE_LD0_WTUR1_TotWh_cntVal" Id="78bf4c5c-50b3-41aa-8f43-28aae44315e1" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WTUR1_TotWh_cntVal EXTENDS FB_AcsiCommonDataClass
+VAR_INPUT
+	actVal: FB_AcsiBATypeINT64 := (Fc:=ACSI_FC_ST, TrgOp:=ACSI_TrgOp_dchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=actVal));
+	q: FB_AcsiDATypeQuality := (Fc:=ACSI_FC_ST, TrgOp:=ACSI_TrgOp_qchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=q));
+	t: FB_AcsiDATypeTimeStamp := (Fc:=ACSI_FC_ST, bLinkResult:=THIS^.AddDataToContainer(ipData:=t));
+	pulsQty: FB_AcsiBATypeFLOAT32 := (Fc:=ACSI_FC_CF, TrgOp:=ACSI_TrgOp_dchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=pulsQty));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

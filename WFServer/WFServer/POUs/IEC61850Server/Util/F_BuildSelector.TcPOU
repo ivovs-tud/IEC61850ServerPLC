@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="F_BuildSelector" Id="{1c9eb3f3-ece6-4d29-baa0-8472cce8052e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_BuildSelector : STRING
+VAR_INPUT
+    iValue : UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[F_BuildSelector := CONCAT('00 ', F_UdintToStringPadded(iValue, 2));]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
