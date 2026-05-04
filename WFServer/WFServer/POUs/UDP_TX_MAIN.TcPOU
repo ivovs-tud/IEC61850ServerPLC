@@ -10,8 +10,6 @@ VAR
 	fbTx				: FB_UDPTxStateMachine := (sPrefix := 'UDP_TX::');
 	stSendTo			: ST_UDPFrameEntry;
 	
-	fbTxFIFO			: FB_UDPFrameFIFO;
-	
 	
 	iTemp_1: BYTE := 1;
 	iTemp_2: BYTE := 2;

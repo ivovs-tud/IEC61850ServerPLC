@@ -4,7 +4,7 @@
     <Declaration><![CDATA[TYPE ST_UDPFrameEntry :
 STRUCT
 	stRemoteAddr 	: ST_SockAddr;	(* Remote address. String containing an (Ipv4) Internet Protocol dotted address and port number. *)
-	sMessage		: ARRAY[1..64] OF BYTE;	(* UDP packet data *)
+	sMessage		: UDP_DATA;	(* UDP packet data *)
 END_STRUCT
 END_TYPE
 ]]></Declaration>

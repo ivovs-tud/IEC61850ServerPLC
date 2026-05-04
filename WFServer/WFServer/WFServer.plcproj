@@ -18,6 +18,9 @@
     <LibraryReferences>{c2fd934e-4540-42b5-9b00-eaa463525b2a}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CommHandlerTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\IEC61850\E_DirectControlState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -33,10 +36,16 @@
     <Compile Include="DUTs\IEC61850\User61850Enums\E_TurCtl.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\S_TURBINEDATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\UDP\E_UDPClientServerState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\UDP\ST_UDPFrameEntry.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\UDP\UDP_DATA.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GVLs\CONSTANTS.TcGVL">
@@ -46,7 +55,17 @@
     <Compile Include="GVLs\TcTelecontrol.TcGVL">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PlcTask.TcTTO">
+    <Compile Include="GVLs\UDP_GLOBALS.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="IEC61850_TASK.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\COMM\F_InsertTurbineDataIEC61850.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\COMM\ParseTurbineData.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\IEC61850Server\FB_Control.TcPOU">
@@ -70,10 +89,10 @@
     <Compile Include="POUs\IEC61850Server\FB_WTURBINEServerSession.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\IEC61850Server\P_IEC61850.TcPOU">
+    <Compile Include="POUs\IEC61850Server\FB_IEC61850.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\IEC61850Server\P_IEC61850ServerInit.TcPOU">
+    <Compile Include="POUs\IEC61850Server\F_IEC61850ServerInit.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\IEC61850Server\User61850Enums\FB_ClrOp.TcPOU">
@@ -358,7 +377,10 @@
     <Compile Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1\FB_LN_WTURBINE_LD0_WYAW1.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\IEC61850_MAIN.TcPOU">
+    <Compile Include="POUs\P_IEC61850_MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\P_COMM_HANDLER.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\UDP\FB_UDPRxStateMachine.TcPOU">
@@ -418,6 +440,7 @@
     <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WTUR1\CDCs" />
     <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1" />
     <Folder Include="POUs\IEC61850Server\WTURBINE\LD0\WYAW1\CDCs" />
+    <Folder Include="POUs\COMM" />
     <Folder Include="POUs\UDP" />
     <Folder Include="POUs\UDP\Util" />
     <Folder Include="VISUs" />

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="UDP_DATA" Id="{0f72b5d4-758d-47da-9ab6-ac9e224924fa}">
+    <Declaration><![CDATA[TYPE UDP_DATA : ARRAY[1..64*c_nNumTurbines] OF BYTE; END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

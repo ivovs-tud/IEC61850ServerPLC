@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="P_IEC61850" Id="{c4980344-d71e-4ccf-9e09-bede6b67863a}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM P_IEC61850
+  <POU Name="FB_IEC61850" Id="{c4980344-d71e-4ccf-9e09-bede6b67863a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_IEC61850
 VAR
 	bInitDone: BOOL := FALSE;	
 
@@ -10,7 +10,7 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[IF NOT bInitDone THEN
-	P_IEC61850ServerInit();
+	F_IEC61850ServerInit();
 
 	bInitDone := TRUE;
 END_IF

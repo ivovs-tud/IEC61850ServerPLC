@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="F_InsertTurbineDataIEC61850" Id="{0eb7409c-c751-4f7d-afdf-ce35cfcabd6b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_InsertTurbineDataIEC61850
+VAR_INPUT
+	nID				: UDINT;
+	sTurbineData	: S_TURBINEDATA;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF nID >= 1 OR nID <= c_nNumTurbines THEN
+	fbWTURBINE[nID].WTURBINELD0.WMET1.HorWdSpd.mag.f.fValue := sTurbineData.WindSpeed;
+	fbWTURBINE[nID].WTURBINELD0.WMET1.HorWdDir.mag.f.fValue := sTurbineData.WindDirection;
+	fbWTURBINE[nID].WTURBINELD0.WTUR1.W.mag.f.fValue := sTurbineData.PowerGen;
+	fbWTURBINE[nID].WTURBINELD0.WYAW1.YwAng.mag.f.fValue := sTurbineData.YawAng;
+	fbWTURBINE[nID].WTURBINELD0.WROT1.RotSpd.mag.f.fValue := sTurbineData.RotorSpeed;
+	fbWTURBINE[nID].WTURBINELD0.WROT1.BlPthAngVal.mag.f.fValue := sTurbineData.PitchAngle;
+	fbWTURBINE[nID].WTURBINELD0.WROT1.BlPthAngTgt.mxVal.f.fValue := sTurbineData.PitchAngleSpt;
+ 	//fbWTURBINE[nID].WTURBINELD0.WROT1.
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

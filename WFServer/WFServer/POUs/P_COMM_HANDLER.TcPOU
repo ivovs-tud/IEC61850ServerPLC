@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="P_COMM_HANDLER" Id="{e2c46c32-4353-43a4-9fe3-574824d63608}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_COMM_HANDLER
+VAR
+	i					: UDINT;
+	nAddr				: ULINT;
+	stReceivedFrom		: ST_UDPFrameEntry;
+	sLoggedMessage		: UDP_DATA;
+	dVal_1				: LREAL;
+	dVal_2				: LREAL;	
+	sTurbineData		: S_TURBINEDATA;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* First we pop from the UDP RX buffer, and process the received data accordingly *)
+REPEAT
+	fbRxFIFO.RemoveHead( );
+	IF fbRxFIFO.bOk THEN
+
+		(* TODO:: Implement received frame handler *)
+		stReceivedFrom := fbRxFIFO.stGet;
+		IF stReceivedFrom.stRemoteAddr.sAddr = sRemoteHost AND stReceivedFrom.stRemoteAddr.nPort = nRemoteTxPort THEN
+// 			sLoggedMessage := stReceivedFrom.sMessage;
+			nAddr := 0;
+			FOR i := 1 TO c_nNumTurbines DO
+				sTurbineData := ParseTurbineData(ADR(stReceivedFrom.sMessage) + nAddr);
+				F_InsertTurbineDataIEC61850(nID := i, sTurbineData := sTurbineData);
+				nAddr := nAddr + SIZEOF(S_TURBINEDATA);
+			END_FOR
+		END_IF
+// 		MEMCPY(ADR(dVal_1), ADR(sLoggedMessage), SIZEOF(dVal_1));
+// 		MEMCPY(ADR(dVal_2), ADR(sLoggedMessage) + SIZEOF(dVal_1), SIZEOF(dVal_2));
+// 			ADSLOGSTR( ADSLOG_MSGTYPE_HINT OR ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_MSGBOX, '%s', stReceivedFrom.sMessage );
+		
+	END_IF
+UNTIL NOT fbRxFIFO.bOk
+END_REPEAT]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

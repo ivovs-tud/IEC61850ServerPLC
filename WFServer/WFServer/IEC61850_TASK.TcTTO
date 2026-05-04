@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Task Name="IEC61850_TASK" Id="{65e87768-5a1d-4896-b22a-d509005ce226}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>10000</CycleTime>
+    <Priority>1</Priority>
+    <PouCall>
+      <Name>P_IEC61850_MAIN</Name>
+    </PouCall>
+    <TaskFBGuid>{242c540a-cf0e-4ca4-be0c-5422c1fa1784}</TaskFBGuid>
+    <Fb_init>{922012af-a869-4c3e-ad46-a3698bc8c1a7}</Fb_init>
+    <Fb_exit>{4d352013-452a-4973-8cd8-08b11514779b}</Fb_exit>
+    <CycleUpdate>{faef075e-5fee-450c-b080-d6b40f352829}</CycleUpdate>
+    <PostCycleUpdate>{6547d2ed-3975-49be-aba1-2e5ffdeaf482}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

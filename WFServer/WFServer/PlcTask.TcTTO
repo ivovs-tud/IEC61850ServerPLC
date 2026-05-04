@@ -5,7 +5,7 @@
     <CycleTime>10000</CycleTime>
     <Priority>7</Priority>
     <PouCall>
-      <Name>IEC61850_MAIN</Name>
+      <Name>P_IEC61850_MAIN</Name>
     </PouCall>
     <TaskFBGuid>{063a2a96-3b19-434b-96d2-c706fb9654fe}</TaskFBGuid>
     <Fb_init>{48d4148c-821d-4121-ac08-024ab029ae52}</Fb_init>

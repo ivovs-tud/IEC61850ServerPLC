@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Task Name="CommHandlerTask" Id="{b1c04414-eaf0-4594-9b9e-32d54ba4ba5f}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>10000</CycleTime>
+    <Priority>18</Priority>
+    <PouCall>
+      <Name>P_COMM_HANDLER</Name>
+    </PouCall>
+    <TaskFBGuid>{427f11d1-2613-4708-804f-fb5375fc1572}</TaskFBGuid>
+    <Fb_init>{a79fb66a-2903-497c-8ffd-9fe52516d50a}</Fb_init>
+    <Fb_exit>{17d6afe4-1db2-4d4e-9ad2-73e91fc5d5c3}</Fb_exit>
+    <CycleUpdate>{21343b09-591c-4417-9049-2509e52c4826}</CycleUpdate>
+    <PostCycleUpdate>{15cfdd17-e8be-428b-af62-fab27c8c90f8}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

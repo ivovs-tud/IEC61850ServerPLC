@@ -16,6 +16,7 @@ END_VAR
 VAR
 	fbBuffer 	: FB_MemRingBuffer;(* Basic (lower level) string buffer control function block *)
 	buffer		: ARRAY[0..UDP_RX_BUFFER_SIZE] OF BYTE;(* Internal buffer memory *)
+	fbCriticalSection:	FB_IecCriticalSection; (* Critical Section required for thread-safety *)
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -24,9 +25,13 @@ END_VAR
     <Action Name="AddTail" Id="{46e5920e-6c9c-4fa8-ba62-0a0a847d37eb}">
       <Implementation>
         <ST><![CDATA[(* Adds new fifo entry *)
-fbBuffer.A_AddTail( pBuffer:= ADR(buffer), cbBuffer:= SIZEOF(buffer),
+// IF fbCriticalSection.Enter() THEN
+	fbBuffer.A_AddTail( pBuffer:= ADR(buffer), cbBuffer:= SIZEOF(buffer),
 					pWrite:= ADR( stPut ), cbWrite := SIZEOF( stPut ), 
 					bOk=>bOk, nCount=>nCount );
+					
+// 	fbCriticalSection.Leave();
+// END_IF
 // IF bOk AND bLog THEN(* Log message *)
 // 	ADSLOGSTR( ADSLOG_MSGTYPE_HINT OR ADSLOG_MSGTYPE_LOG, 
 // 			CONCAT( CONCAT( sPrefix, SOCKETADDR_TO_STRING(stPut.stRemoteAddr) ), '>>"%s"' ),
@@ -38,27 +43,64 @@ fbBuffer.A_AddTail( pBuffer:= ADR(buffer), cbBuffer:= SIZEOF(buffer),
       <Implementation>
         <ST><![CDATA[(* Clears all fifo entries *)
 // stGet.sMessage := 0;
-MEMSET(ADR(stGet.sMessage), 0, SIZEOF(stGet.sMessage));
-stGet.stRemoteAddr.nPort := 0;
-stGet.stRemoteAddr.sAddr := '';
-fbBuffer.A_Reset( pBuffer := ADR( buffer ), cbBuffer := SIZEOF( buffer ), bOk=>bOk, nCount=>nCount ); ]]></ST>
+// IF fbCriticalSection.Enter() THEN
+	MEMSET(ADR(stGet.sMessage), 0, SIZEOF(stGet.sMessage));
+	stGet.stRemoteAddr.nPort := 0;
+	stGet.stRemoteAddr.sAddr := '';
+	fbBuffer.A_Reset( pBuffer := ADR( buffer ), cbBuffer := SIZEOF( buffer ), bOk=>bOk, nCount=>nCount ); 
+	
+// 	fbCriticalSection.Leave();
+// END_IF	
+]]></ST>
       </Implementation>
     </Action>
     <Action Name="RemoveHead" Id="{13ea9795-e95e-4f4f-a519-2dbc2dda7a42}">
       <Implementation>
         <ST><![CDATA[(* Removes oldest fifo entry *)
-IF nCount = 0 THEN
-	MEMSET(ADR(stGet.sMessage), 0, SIZEOF(stGet.sMessage));
-	stGet.stRemoteAddr.nPort := 0;
-	stGet.stRemoteAddr.sAddr := '';
-	bOk := FALSE;
-	RETURN;
-END_IF
 
-fbBuffer.A_RemoveHead( pBuffer:= ADR(buffer), cbBuffer:= SIZEOF(buffer),
-						pRead := ADR( stGet ), cbRead := SIZEOF( stGet ),
-						bOk=>bOk, nCount=>nCount );]]></ST>
+// IF fbCriticalSection.Enter() THEN
+	IF nCount = 0 THEN
+		MEMSET(ADR(stGet.sMessage), 0, SIZEOF(stGet.sMessage));
+		stGet.stRemoteAddr.nPort := 0;
+		stGet.stRemoteAddr.sAddr := '';
+		bOk := FALSE;
+		RETURN;
+	END_IF
+	
+	fbBuffer.A_RemoveHead( pBuffer:= ADR(buffer), cbBuffer:= SIZEOF(buffer),
+							pRead := ADR( stGet ), cbRead := SIZEOF( stGet ),
+							bOk=>bOk, nCount=>nCount );
+// 	fbCriticalSection.Leave();
+// END_IF]]></ST>
       </Implementation>
     </Action>
+    <Method Name="TEMPRemoveHead" Id="{b657f026-5eb2-4f4a-b09f-8934a623ef4e}">
+      <Declaration><![CDATA[METHOD TEMPRemoveHead : BOOL
+VAR_IN_OUT
+	stGet	: ST_UDPFrameEntry;
+END_VAR
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	bOk		: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF fbCriticalSection.Enter() THEN
+	IF nCount = 0 THEN
+		MEMSET(ADR(stGet.sMessage), 0, SIZEOF(stGet.sMessage));
+		stGet.stRemoteAddr.nPort := 0;
+		stGet.stRemoteAddr.sAddr := '';
+		bOk := FALSE;
+		RETURN;
+	END_IF
+	
+	fbBuffer.A_RemoveHead( pBuffer:= ADR(buffer), cbBuffer:= SIZEOF(buffer),
+							pRead := ADR( stGet ), cbRead := SIZEOF( stGet ),
+							bOk=>bOk, nCount=>nCount );
+	fbCriticalSection.Leave();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

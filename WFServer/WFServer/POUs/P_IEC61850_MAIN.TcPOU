@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="P_IEC61850_MAIN" Id="{de4ea64a-4a85-48ba-b89c-2a3d98124197}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_IEC61850_MAIN
+VAR
+	fbIEC 	: FB_IEC61850;	
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbIEC();]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

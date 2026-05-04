@@ -21,18 +21,18 @@ END_VAR]]></Declaration>
 bSuccess:= fbAdapter.Execute(ipError=>ipError); (* Execute network adapter *)
 
 (*=========================================================================================*)
-IF bStart THEN (* Start publishing of GOOSE data *)
-	bStart:= FALSE;
-	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Start(ipAdapter:=fbAdapter, ipError=>ipError);
-ELSIF bStop THEN (* Stop publishing of GOOSE data *)
-	bStop:= FALSE;
-	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Stop(ipError=>ipError);
-ELSIF bUpdate THEN (* Update published GOOSE data *)
-	bUpdate:= FALSE;
-	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Update(ipError=>ipError);
-ELSE (* Execute publisher GoCB's *)
-	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Execute(ipError=>ipError);
-END_IF]]></ST>
+// IF bStart THEN (* Start publishing of GOOSE data *)
+// 	bStart:= FALSE;
+// 	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Start(ipAdapter:=fbAdapter, ipError=>ipError);
+// ELSIF bStop THEN (* Stop publishing of GOOSE data *)
+// 	bStop:= FALSE;
+// 	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Stop(ipError=>ipError);
+// ELSIF bUpdate THEN (* Update published GOOSE data *)
+// 	bUpdate:= FALSE;
+// 	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Update(ipError=>ipError);
+// ELSE (* Execute publisher GoCB's *)
+// 	bSuccess:= fbWTURBINE.WTURBINELD0.LLN0.gocb01.Publisher.Execute(ipError=>ipError);
+// END_IF]]></ST>
     </Implementation>
     <Method Name="OnLinkStatusChange" Id="{cdccf58f-305b-44e8-9bd2-2e9210098848}">
       <Declaration><![CDATA[(* This method is called every time the network adapter link status changes. *)

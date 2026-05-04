@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="UDP_GLOBALS" Id="{5b3a1df2-823e-4a08-a784-94d86007961c}">
+    <Declaration><![CDATA[VAR_GLOBAL
+	(* Global TX and RX buffers, together with their respective critical section handlers*)
+// 	fbUDP_RX_CS			: FB_IecCriticalSection;
+	fbRxFIFO			: FB_UDPFrameFIFO;
+	
+// 	fbUDP_TX_CS			: FB_IecCriticalSection;
+	fbTxFIFO			: FB_UDPFrameFIFO;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

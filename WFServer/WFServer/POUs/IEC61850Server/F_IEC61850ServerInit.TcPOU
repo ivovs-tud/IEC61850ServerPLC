@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="P_IEC61850ServerInit" Id="{0af0e9e4-38c1-486d-a1b0-f5236706a8b5}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM P_IEC61850ServerInit
+  <POU Name="F_IEC61850ServerInit" Id="{0af0e9e4-38c1-486d-a1b0-f5236706a8b5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_IEC61850ServerInit
 VAR
 	i: UDINT;
 	j: UDINT;
