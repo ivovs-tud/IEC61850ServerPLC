@@ -3,9 +3,23 @@
   <POU Name="UDP_RX_MAIN" Id="{da0e4c2a-35ee-4cf5-990d-e0180ade60e9}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM UDP_RX_MAIN
 VAR
+	bReceiveOnce		: BOOL := FALSE;		
+
 	fbCloseAll 			: FB_SocketCloseAll;
    	bInitialize			: BOOL := TRUE;
 	
+	bEnable				: BOOL 			:= TRUE;(* TRUE => Enable/connect, FALSE => Disable/disconnect *)
+	bLog				: BOOL			:= TRUE;(* TRUE => Enable log message output, FALSE => Disable *)
+	
+	fbRx				: FB_UDPRxStateMachine := (sPrefix := 'UDP_RX::');
+	
+	fbRxFIFO			: FB_UDPFrameFIFO;
+	
+	
+	stReceivedFrom		: ST_UDPFrameEntry;
+	sLoggedMessage		: ARRAY[1..64] OF BYTE;
+	dVal_1				: LREAL;
+	dVal_2				: LREAL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -16,7 +30,27 @@ IF fbCloseAll.bBusy OR fbCloseAll.bError THEN
 END_IF
 bInitialize := FALSE;
 
-]]></ST>
+
+fbRx(fbRxFifo:=fbRxFIFO, bEnable:=bEnable, bLog:=bLog);
+
+(* Remove all received frames from queue. Temporary ==> Should be implemented in its own thread eventually *)
+IF bReceiveOnce THEN
+	bReceiveOnce := FALSE;
+	REPEAT
+		fbRxFIFO.RemoveHead( );
+		IF fbRxFIFO.bOk THEN
+	
+			(* TODO:: Implement received frame handler *)
+			stReceivedFrom := fbRxFIFO.stGet;
+			sLoggedMessage := stReceivedFrom.sMessage;
+			MEMCPY(ADR(dVal_1), ADR(sLoggedMessage), SIZEOF(dVal_1));
+			MEMCPY(ADR(dVal_2), ADR(sLoggedMessage) + SIZEOF(dVal_1), SIZEOF(dVal_2));
+// 			ADSLOGSTR( ADSLOG_MSGTYPE_HINT OR ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_MSGBOX, '%s', stReceivedFrom.sMessage );
+			
+		END_IF
+	UNTIL NOT fbRxFIFO.bOk
+	END_REPEAT
+END_IF]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

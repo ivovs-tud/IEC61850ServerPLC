@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_UDPRxStateMachine" Id="{a473d9f4-5e3c-499f-a352-edf91a462c57}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_UDPRxStateMachine
+VAR_IN_OUT
+	fbRxFIFO		: FB_UDPFrameFIFO;
+END_VAR
+VAR_INPUT
+	bEnable			: BOOL			:= FALSE;
+	tReconnect		: TIME			:= T#5S;
+	bLog			: BOOL			:= FALSE;
+	sPrefix			: STRING		:= 'UDP_RX::';
+END_VAR
+VAR_OUTPUT
+	bCreated		: BOOL			:= FALSE;
+END_VAR
+VAR
+	fbCreate		: FB_SocketUdpCreate;
+	fbClose			: FB_SocketClose;
+	fbReceiveFrom	: FB_SocketUdpReceiveFrom;
+	stReceivedFrom	: ST_UDPFrameEntry;
+	fbCreateTimer	: TON := ( PT := T#0S );	
+	eState			: E_UDPClientServerState;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE eState OF
+	(* Idle State *)
+	eUDP_STATE_IDLE:
+		IF bEnable XOR bCreated THEN
+			IF bEnable THEN
+				(* Clear rx fifo *)
+				fbRxFIFO.Clear( sPrefix := CONCAT( sPrefix, 'FB_FrameFifo(sender)::' ), bLog := bLog );
+				
+				(* At program start (first time) connect immediately, next time after delay time *)
+				fbCreateTimer( IN := TRUE );
+				IF fbCreateTimer.Q THEN
+					fbCreateTimer( IN := FALSE, PT := tReconnect ); 
+					eState := eUDP_STATE_CREATE_START;
+				END_IF
+			ELSE
+				eState := eUDP_STATE_CLOSE_START;
+			END_IF
+		ELSIF bCreated THEN
+			eState := eUDP_STATE_RECEIVE_START;
+// 			fbRxFIFO.RemoveHead( stGet => stSendTo );
+// 			IF fbRxFIFO.bOk THEN
+// 				eState := eUDP_STATE_SEND_START;
+// 			END_IF
+		ELSE
+			fbCreateTimer( IN := FALSE, PT := T#0S );
+		END_IF
+	
+	(* Creation States *)
+	eUDP_STATE_CREATE_START:
+		fbCreate( bExecute := FALSE  );
+		fbCreate( sSrvNetId := sSrvNetId, sLocalHost:= sLocalHost, nLocalPort:= nLocalRxPort, bExecute:= TRUE );
+		eState := eUDP_STATE_CREATE_WAIT;
+
+	eUDP_STATE_CREATE_WAIT:
+		fbCreate( bExecute := FALSE );
+		IF NOT fbCreate.bBusy THEN
+			IF NOT fbCreate.bError THEN
+				bCreated := TRUE;
+// 				fbLog.Message( sMessage := 'Connectionless (UDP) socket created!', hSocket := fbCreate.hSocket );
+				eState := eUDP_STATE_IDLE;
+			ELSE
+// 				fbLog.Error( sMessage := 'FB_SocketUdpCreate()', nErrID := fbCreate.nErrID );
+				eState := eUDP_STATE_ERROR;
+			END_IF
+		END_IF
+		
+	eUDP_STATE_RECEIVE_START:
+		MEMSET( ADR( stReceivedFrom ), 0, SIZEOF( stReceivedFrom ) );
+		fbReceiveFrom( bExecute := FALSE );
+		fbReceiveFrom( sSrvNetId := sSrvNetId, 
+						pDest:= ADR( stReceivedFrom.sMessage ),
+						cbLen:= SIZEOF( stReceivedFrom.sMessage ) - 1, (* Without string delimiter *)
+						hSocket:= fbCreate.hSocket, bExecute:= TRUE );
+		eState := eUDP_STATE_RECEIVE_WAIT;
+
+	eUDP_STATE_RECEIVE_WAIT:
+		fbReceiveFrom( bExecute := FALSE );
+		IF NOT fbReceiveFrom.bBusy THEN
+			IF NOT fbReceiveFrom.bError THEN
+				IF fbReceiveFrom.nRecBytes > 0 THEN
+					
+					stReceivedFrom.stRemoteAddr.sAddr := fbReceiveFrom.sRemoteHost;
+					stReceivedFrom.stRemoteAddr.nPort := fbReceiveFrom.nRemotePort;
+					
+					fbRxFIFO.AddTail( stPut := stReceivedFrom );
+	// 				IF NOT fbRxFIFO.bOk THEN(* Check for fifo overflow *)
+	// 					fbLog.Error( sMessage :='FB_FrameFifo(receiver)', nErrID := PLCPRJ_ERROR_RECFIFO_OVERFLOW );
+	// 				END_IF
+				END_IF
+				eState := eUDP_STATE_IDLE;
+			ELSE
+	// 			fbLog.Error( sMessage := 'FB_SocketUdpReceiveFrom()', nErrID := fbReceiveFrom.nErrID );
+				IF fbReceiveFrom.nErrID = 16#80072746 THEN(* Connection is reset by remote side *)
+					eState := eUDP_STATE_IDLE;
+				ELSE
+					eState := eUDP_STATE_ERROR;
+				END_IF
+			END_IF
+		END_IF
+		
+		
+	(* Closing States *)
+	eUDP_STATE_CLOSE_START:
+// 		fbLog.Message( sMessage := 'Closing connectionless (UDP) socket!', hSocket := fbCreate.hSocket );
+		fbClose( bExecute := FALSE );
+		fbClose( sSrvNetId := sSrvNetId, hSocket := fbCreate.hSocket, bExecute := TRUE );
+		eState := eUDP_STATE_CLOSE_WAIT;
+		
+	eUDP_STATE_CLOSE_WAIT:
+		fbClose( bExecute := FALSE );
+		IF NOT fbClose.bBusy THEN
+			bCreated := FALSE;
+			IF NOT fbClose.bError THEN
+				eState := eUDP_STATE_IDLE;
+			ELSE
+// 				fbLog.Error( sMessage := 'FB_SocketClose()', nErrID := fbClose.nErrID );
+				eState := eUDP_STATE_ERROR;
+			END_IF
+		END_IF
+
+	(* Error State *)
+
+	eUDP_STATE_ERROR: (* Error step *)
+		IF bCreated THEN
+			eState := eUDP_STATE_CLOSE_START;
+		ELSE
+			eState := eUDP_STATE_IDLE;
+		END_IF
+		
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

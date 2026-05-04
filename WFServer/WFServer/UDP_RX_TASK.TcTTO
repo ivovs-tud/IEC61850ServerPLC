@@ -3,7 +3,7 @@
   <Task Name="UDP_RX_TASK" Id="{8659bc94-34df-410f-bf7d-857e1aba7941}">
     <!--CycleTime in micro seconds.-->
     <CycleTime>10000</CycleTime>
-    <Priority>12</Priority>
+    <Priority>5</Priority>
     <PouCall>
       <Name>UDP_RX_MAIN</Name>
     </PouCall>

@@ -361,6 +361,9 @@
     <Compile Include="POUs\IEC61850_MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\UDP\FB_UDPRxStateMachine.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\UDP\FB_UDPTxStateMachine.TcPOU">
       <SubType>Code</SubType>
     </Compile>

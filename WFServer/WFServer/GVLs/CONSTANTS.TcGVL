@@ -16,7 +16,8 @@
 	nLocalTxPort		: UDINT			:= 10000;	(* UDP port used for transmission *)
 	nLocalRxPort		: UDINT			:= 10001;	(* UDP port used for receiving *)
 	sRemoteHost			: T_IPv4Addr 	:= '172.19.3.43';(* Remote address: String containing an (Ipv4) Internet Protocol dotted address. *)
-	nRemotePort			: UDINT 		:= 11000;(* Remote address: IP port number. *)
+	nRemoteTxPort		: UDINT 		:= 11000; (* Remote address: IP Tx port number. *)
+	nRemoteRxPort		: UDINT			:= 10000; (* Remote address: IP Rx port number. *)
 	
 	UDP_RX_BUFFER_SIZE 	: UDINT := 1024; 	// Size of the UDP RX FIFO Buffer in Bytes
 	UDP_TX_BUFFER_SIZE 	: UDINT := 1024; 	// Size of the UDP TX FIFO Buffer in Bytes

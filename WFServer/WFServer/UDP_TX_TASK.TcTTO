@@ -3,7 +3,7 @@
   <Task Name="UDP_TX_TASK" Id="{48e56708-e8cd-499e-a897-6a75adfc203f}">
     <!--CycleTime in micro seconds.-->
     <CycleTime>10000</CycleTime>
-    <Priority>13</Priority>
+    <Priority>6</Priority>
     <PouCall>
       <Name>UDP_TX_MAIN</Name>
     </PouCall>

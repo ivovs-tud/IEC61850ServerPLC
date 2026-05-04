@@ -3,7 +3,7 @@
   <Task Name="PlcTask" Id="{d30e0511-85f4-453f-8d58-00bd9a6f73d4}">
     <!--CycleTime in micro seconds.-->
     <CycleTime>10000</CycleTime>
-    <Priority>20</Priority>
+    <Priority>7</Priority>
     <PouCall>
       <Name>IEC61850_MAIN</Name>
     </PouCall>

@@ -30,7 +30,7 @@ IF fbTx.bCreated THEN
 		stSendTo.sMessage[1] := INT_TO_BYTE(iTemp_1);
 		stSendTo.sMessage[2] := INT_TO_BYTE(iTemp_2);		
 		stSendTo.stRemoteAddr.sAddr := sRemoteHost;	(* Remote host IP address *)
-		stSendTo.stRemoteAddr.nPort := nRemotePort;	(* Remote host port number *)
+		stSendTo.stRemoteAddr.nPort := nRemoteTxPort;	(* Remote host port number *)
 		fbTxFIFO.AddTail( stPut := stSendTo );	(* Add new entry to the send queue *)
 	END_IF
 END_IF]]></ST>
