@@ -13,25 +13,34 @@ VAR
 	
 	iTemp_1: BYTE := 1;
 	iTemp_2: BYTE := 2;
+	
+	fbCloseAll 			: FB_SocketCloseAll;
+	bInitialize: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbTx(fbTxFifo:=fbTxFIFO, bEnable:=bEnable, bLog:=bLog);
+      <ST><![CDATA[fbCloseAll( sSrvNetId := sSrvNetId, bExecute:= bInitialize );
+IF fbCloseAll.bBusy OR fbCloseAll.bError THEN
+	RETURN;
+END_IF
+bInitialize := FALSE;
 
-iTemp_1 := iTemp_1 + 1;
-iTemp_2 := iTemp_2+2;
+fbTx(fbTxFifo:=fbTxFIFO, bEnable:=bEnable, bLog:=bLog);
 
-IF fbTx.bCreated THEN
-	IF bSendOnceToRemote THEN
-		bSendOnceToRemote 			:= FALSE;		(* Clear flag *)
-		MEMSET(ADR(stSendTo.sMessage), 0, SIZEOF(stSendto.sMessage));
-		stSendTo.sMessage[1] := INT_TO_BYTE(iTemp_1);
-		stSendTo.sMessage[2] := INT_TO_BYTE(iTemp_2);		
-		stSendTo.stRemoteAddr.sAddr := sRemoteHost;	(* Remote host IP address *)
-		stSendTo.stRemoteAddr.nPort := nRemoteTxPort;	(* Remote host port number *)
-		fbTxFIFO.AddTail( stPut := stSendTo );	(* Add new entry to the send queue *)
-	END_IF
-END_IF]]></ST>
+// iTemp_1 := iTemp_1 + 1;
+// iTemp_2 := iTemp_2+2;
+// 
+// IF fbTx.bCreated THEN
+// 	IF bSendOnceToRemote THEN
+// 		bSendOnceToRemote 			:= FALSE;		(* Clear flag *)
+// 		MEMSET(ADR(stSendTo.sMessage), 0, SIZEOF(stSendto.sMessage));
+// 		stSendTo.sMessage[1] := INT_TO_BYTE(iTemp_1);
+// 		stSendTo.sMessage[2] := INT_TO_BYTE(iTemp_2);		
+// 		stSendTo.stRemoteAddr.sAddr := sRemoteHost;	(* Remote host IP address *)
+// 		stSendTo.stRemoteAddr.nPort := nRemoteTxPort;	(* Remote host port number *)
+// 		fbTxFIFO.AddTail( stPut := stSendTo );	(* Add new entry to the send queue *)
+// 	END_IF
+// END_IF]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

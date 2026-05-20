@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="TCP_DATA" Id="{6a7b971e-eb8e-4ba4-8b90-63c49e95cc0a}">
+    <Declaration><![CDATA[// TYPE TCP_DATA : ARRAY[1..cTCP_FrameSize] OF BYTE; END_TYPE
+TYPE TCP_DATA :
+STRUCT
+	nID				: UDINT;
+	nUnixTime		: ULINT;
+	YwAng			: REAL;
+	YwAngSpt		: REAL;
+	W				: REAL;
+	WSpt			: REAL;
+	HorWdSpd		: REAL;
+	HorWdDir		: REAL;
+	RotSpd			: REAL;
+	PitchAngle		: REAL;
+	PitchAngleSpt	: REAL;
+// 	GenTorque		: REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

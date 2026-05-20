@@ -16,6 +16,7 @@ VAR_OUTPUT
 END_VAR
 VAR
 	fbCreate		: FB_SocketUdpCreate;
+	hSocket			: T_HSOCKET;
 	fbClose			: FB_SocketClose;
 	fbSendTo		: FB_SocketUdpSendTo;
 	stSendTo		: ST_UDPFrameEntry;
@@ -61,6 +62,7 @@ END_VAR
 		IF NOT fbCreate.bBusy THEN
 			IF NOT fbCreate.bError THEN
 				bCreated := TRUE;
+				hSocket := fbCreate.hSocket;
 // 				fbLog.Message( sMessage := 'Connectionless (UDP) socket created!', hSocket := fbCreate.hSocket );
 				eState := eUDP_STATE_IDLE;
 			ELSE
@@ -121,5 +123,33 @@ END_VAR
 
 END_CASE]]></ST>
     </Implementation>
+    <Method Name="FB_Exit" Id="{08b2b0a0-5425-4e13-b9eb-61b7cc809be2}">
+      <Declaration><![CDATA[//FB_Exit must be implemented explicitly. If there is an implementation, then the
+//method is called before the controller removes the code of the function block instance
+//(implicit call). The return value is not evaluated.
+METHOD FB_Exit: BOOL
+VAR_INPUT
+    bInCopyCode: BOOL;  // TRUE: the exit method is called in order to leave the instance which will be copied afterwards (online change).  
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bCreated THEN
+    fbClose(sSrvNetId := '', hSocket := hSocket, bExecute := TRUE);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{2252a51d-108b-45e9-8470-ed4d45193779}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

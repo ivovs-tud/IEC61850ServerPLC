@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1">
   <GVL Name="CONSTANTS" Id="{1cd14af3-4e9e-4476-ae7a-07aec11c47f3}">
     <Declaration><![CDATA[VAR_GLOBAL CONSTANT
-	c_nNumTurbines	: UDINT := 12;
+	c_nNumTurbines	: UDINT := 3;
 	
 	(* IEC 61850 Server Definitions *)
 	c_aIpAddr 		: STRING := '172.19.3.190';
@@ -13,8 +13,8 @@
 	(* UDP Connection Constants *)
 	sSrvNetId			: T_AmsNetID 	:= '';(* TwinCAT TCP/IP server network address. Default: empty string. *)
 	sLocalHost			: T_IPv4Addr 	:= '172.19.3.190';(* Local address: String containing an (Ipv4) Internet Protocol dotted address. *)
-	nLocalTxPort		: UDINT			:= 10000;	(* UDP port used for transmission *)
-	nLocalRxPort		: UDINT			:= 10001;	(* UDP port used for receiving *)
+	nLocalTxPort		: UDINT			:= 11000;	(* UDP port used for transmission *)
+	nLocalRxPort		: UDINT			:= 11001;	(* UDP port used for receiving *)
 	sRemoteHost			: T_IPv4Addr 	:= '172.19.3.43';(* Remote address: String containing an (Ipv4) Internet Protocol dotted address. *)
 	nRemoteTxPort		: UDINT 		:= 11000; (* Remote address: IP Tx port number. *)
 	nRemoteRxPort		: UDINT			:= 10000; (* Remote address: IP Rx port number. *)

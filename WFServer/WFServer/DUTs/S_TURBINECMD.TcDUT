@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="S_TURBINECMD" Id="{829a6fd2-05c3-4515-9df0-c26409cfd099}">
+    <Declaration><![CDATA[(* Holds the command for all turbines *)
+{attribute 'pack_mode' := '1'}
+TYPE S_TURBINECMD :
+STRUCT
+	bEnable 		: ARRAY[1..c_nNumTurbines] OF BOOL;
+	bEmergencyStop	: ARRAY[1..c_nNumTurbines] OF BOOL;
+	fWSpt			: ARRAY[1..c_nNumTurbines] OF REAL;
+	fYawSpt			: ARRAY[1..c_nNumTurbines] OF REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

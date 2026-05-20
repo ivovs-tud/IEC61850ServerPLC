@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Task Name="DH_TCP_TX_TASK" Id="{4efc3c10-4aa3-4d0a-9a20-9603b08a77bf}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>10000</CycleTime>
+    <Priority>3</Priority>
+    <PouCall>
+      <Name>DH_TX_TCP_MAIN</Name>
+    </PouCall>
+    <TaskFBGuid>{104a373a-7f14-45ba-b646-b5f0549eb2e8}</TaskFBGuid>
+    <Fb_init>{5ba0491e-a485-4669-b312-c306eadb7aa9}</Fb_init>
+    <Fb_exit>{5b8a65d8-e5b5-416f-9198-3415768445a0}</Fb_exit>
+    <CycleUpdate>{6617567b-0834-4157-89c8-9cf7eb13b7a5}</CycleUpdate>
+    <PostCycleUpdate>{c25b040c-4a61-40c2-a506-639b6267a83a}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

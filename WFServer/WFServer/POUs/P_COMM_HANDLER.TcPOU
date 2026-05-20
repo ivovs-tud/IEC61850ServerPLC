@@ -10,7 +10,13 @@ VAR
 	dVal_1				: LREAL;
 	dVal_2				: LREAL;	
 	sTurbineData		: S_TURBINEDATA;
-
+	iTemp				: ULINT;
+	
+	sTxTimer			: TON;
+	bSend				: BOOL := FALSE;
+	cTxTimerPeriod		: TIME := T#500MS;
+	sTurbineCmd			: S_TURBINECMD;
+	stSendTo			: ST_UDPFrameEntry;;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -37,7 +43,23 @@ REPEAT
 		
 	END_IF
 UNTIL NOT fbRxFIFO.bOk
-END_REPEAT]]></ST>
+END_REPEAT
+
+
+(* Second, we take the turbine setpoints and transmit to the turbine *)
+bSend := sTxTimer.Q;
+sTxTimer(IN := NOT sTxTimer.Q, PT := cTxTimerPeriod);
+
+IF bSend THEN
+	sTurbineCmd := F_CreateTurbineCMD();
+	fbTXFIFO.AddTail( );
+	iTemp :=  SIZEOF(sTurbineCmd);
+	MEMCPY(ADR(stSendTo.sMessage), ADR(sTurbineCmd), SIZEOF(sTurbineCmd));
+	stSendTo.stRemoteAddr.sAddr := sRemoteHost;	(* Remote host IP address *)
+	stSendTo.stRemoteAddr.nPort := nRemoteRxPort;	(* Remote host port number *)
+	fbTxFIFO.AddTail( stPut := stSendTo );
+END_IF
+]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

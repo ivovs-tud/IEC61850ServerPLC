@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_TCPBinaryFrame" Id="{816955be-d6b4-45c9-8df9-e02c9d06b345}">
+    <Declaration><![CDATA[(* Simple binary TCP/IP frame (8 byte aligned) *)
+TYPE ST_TCPBinaryFrame :
+STRUCT
+	head	: ST_TCPBinaryHeader;(* Frame header (16 byte) *)
+	data 	: TCP_DATA;(* User data (?? byte) *)
+
+	(* Total frame size = 16+?? byte *)
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

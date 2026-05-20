@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="TCP_GLOBALS" Id="{8d8d2465-2594-4540-bef6-66921a8b4009}">
+    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
+	cTCP_BUFFER_SIZE						: UDINT := 1000;
+	cTCP_FrameSize							: UDINT := 256;
+
+	cTCP_SEND_CYCLE_TIME					: TIME := T#1S;
+	cTCP_RECEIVE_POLLING_TIME		 		: TIME := T#100MS;
+	cTCP_RECEIVE_TIMEOUT					: TIME := T#50S;
+
+	(* Some project specific error codes *)
+	cTCP_ERROR_RECEIVE_TIMEOUT				: UDINT := 16#8101;(* Receive timeout error *)
+	cTCP_ERROR_SENDFIFO_OVERFLOW			: UDINT := 16#8102;(* Send fifo overflow *)
+	cTCP_ERROR_RECFIFO_OVERFLOW				: UDINT := 16#8103;(* Receive fifo overflow *)
+	cTCP_ERROR_INVALID_FRAME_FORMAT		: UDINT := 16#8104;(* Invalid frame format/data *)
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

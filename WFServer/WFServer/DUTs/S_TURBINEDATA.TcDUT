@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <DUT Name="S_TURBINEDATA" Id="{1e57f15f-ebcc-4899-8f91-5fae8db087cd}">
-    <Declaration><![CDATA[TYPE S_TURBINEDATA :
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE S_TURBINEDATA :
 STRUCT
-	WindSpeed			: LREAL;
-	WindDirection		: LREAL;
-	PowerGen			: LREAL;
-	YawAng				: LREAL;
-	RotorSpeed			: LREAL;
-	PitchAngle			: LREAL;
-	PitchAngleSpt		: LREAL;
-	GenTorque			: LREAL;
-// 	nElem				: UDINT := 8;
+	WindSpeed			: REAL;
+	WindDirection		: REAL;
+	PowerGen			: REAL;
+	YawAng				: REAL;
+	RotorSpeed			: REAL;
+	PitchAngle			: REAL;
+	PitchAngleSpt		: REAL;
+	GenTorque			: REAL;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

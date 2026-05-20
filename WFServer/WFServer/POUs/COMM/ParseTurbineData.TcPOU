@@ -16,31 +16,31 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// bOk := FALSE;
-
-nAddr := 0;
-MEMCPY(ADR(sTurbineData.WindSpeed) + nAddr, sMessage + nAddr, SIZEOF(sTurbineData.WindSpeed));
-nAddr := nAddr + SIZEOF(sTurbineData.WindSpeed);
-
-MEMCPY(ADR(sTurbineData.WindDirection), sMessage + nAddr, SIZEOF(sTurbineData.WindDirection));
-nAddr := nAddr + SIZEOF(sTurbineData.WindDirection);
-
-MEMCPY(ADR(sTurbineData.PowerGen), sMessage + nAddr, SIZEOF(sTurbineData.PowerGen));
-nAddr := nAddr + SIZEOF(sTurbineData.PowerGen);
-
-MEMCPY(ADR(sTurbineData.YawAng), sMessage + nAddr, SIZEOF(sTurbineData.YawAng));
-nAddr := nAddr + SIZEOF(sTurbineData.YawAng);
-
-MEMCPY(ADR(sTurbineData.RotorSpeed), sMessage + nAddr, SIZEOF(sTurbineData.RotorSpeed));
-nAddr := nAddr + SIZEOF(sTurbineData.RotorSpeed);
-
-MEMCPY(ADR(sTurbineData.PitchAngle), sMessage + nAddr, SIZEOF(sTurbineData.PitchAngle));
-nAddr := nAddr + SIZEOF(sTurbineData.PitchAngle);
-
-MEMCPY(ADR(sTurbineData.PitchAngleSpt), sMessage + nAddr, SIZEOF(sTurbineData.PitchAngleSpt));
-nAddr := nAddr + SIZEOF(sTurbineData.PitchAngleSpt);
-
-MEMCPY(ADR(sTurbineData.GenTorque), sMessage + nAddr, SIZEOF(sTurbineData.GenTorque));
-nAddr := nAddr + SIZEOF(sTurbineData.GenTorque);
+MEMCPY(ADR(sTurbineData), sMessage, SIZEOF(sTurbineData));
+// nAddr := 0;
+// MEMCPY(ADR(sTurbineData.WindSpeed) + nAddr, sMessage + nAddr, SIZEOF(sTurbineData.WindSpeed));
+// nAddr := nAddr + SIZEOF(sTurbineData.WindSpeed);
+// 
+// MEMCPY(ADR(sTurbineData.WindDirection), sMessage + nAddr, SIZEOF(sTurbineData.WindDirection));
+// nAddr := nAddr + SIZEOF(sTurbineData.WindDirection);
+// 
+// MEMCPY(ADR(sTurbineData.PowerGen), sMessage + nAddr, SIZEOF(sTurbineData.PowerGen));
+// nAddr := nAddr + SIZEOF(sTurbineData.PowerGen);
+// 
+// MEMCPY(ADR(sTurbineData.YawAng), sMessage + nAddr, SIZEOF(sTurbineData.YawAng));
+// nAddr := nAddr + SIZEOF(sTurbineData.YawAng);
+// 
+// MEMCPY(ADR(sTurbineData.RotorSpeed), sMessage + nAddr, SIZEOF(sTurbineData.RotorSpeed));
+// nAddr := nAddr + SIZEOF(sTurbineData.RotorSpeed);
+// 
+// MEMCPY(ADR(sTurbineData.PitchAngle), sMessage + nAddr, SIZEOF(sTurbineData.PitchAngle));
+// nAddr := nAddr + SIZEOF(sTurbineData.PitchAngle);
+// 
+// MEMCPY(ADR(sTurbineData.PitchAngleSpt), sMessage + nAddr, SIZEOF(sTurbineData.PitchAngleSpt));
+// nAddr := nAddr + SIZEOF(sTurbineData.PitchAngleSpt);
+// 
+// MEMCPY(ADR(sTurbineData.GenTorque), sMessage + nAddr, SIZEOF(sTurbineData.GenTorque));
+// nAddr := nAddr + SIZEOF(sTurbineData.GenTorque);
 
 // bOk := TRUE;
 ]]></ST>

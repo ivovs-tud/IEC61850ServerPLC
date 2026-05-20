@@ -13,14 +13,14 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[IF nID >= 1 OR nID <= c_nNumTurbines THEN
-	fbWTURBINE[nID].WTURBINELD0.WMET1.HorWdSpd.mag.f.fValue := sTurbineData.WindSpeed;
-	fbWTURBINE[nID].WTURBINELD0.WMET1.HorWdDir.mag.f.fValue := sTurbineData.WindDirection;
-	fbWTURBINE[nID].WTURBINELD0.WTUR1.W.mag.f.fValue := sTurbineData.PowerGen;
-	fbWTURBINE[nID].WTURBINELD0.WYAW1.YwAng.mag.f.fValue := sTurbineData.YawAng;
-	fbWTURBINE[nID].WTURBINELD0.WROT1.RotSpd.mag.f.fValue := sTurbineData.RotorSpeed;
-	fbWTURBINE[nID].WTURBINELD0.WROT1.BlPthAngVal.mag.f.fValue := sTurbineData.PitchAngle;
-	fbWTURBINE[nID].WTURBINELD0.WROT1.BlPthAngTgt.mxVal.f.fValue := sTurbineData.PitchAngleSpt;
- 	//fbWTURBINE[nID].WTURBINELD0.WROT1.
+	fbWTURBINE[nID].WTURBINELD0.WMET1.HorWdSpd.mag.fValue := sTurbineData.WindSpeed;
+	fbWTURBINE[nID].WTURBINELD0.WMET1.HorWdDir.mag.fValue := sTurbineData.WindDirection;
+	fbWTURBINE[nID].WTURBINELD0.WTUR1.W.mag.fValue := sTurbineData.PowerGen;
+	fbWTURBINE[nID].WTURBINELD0.WYAW1.YwAng.mag.fValue := sTurbineData.YawAng;
+	fbWTURBINE[nID].WTURBINELD0.WROT1.RotSpd.mag.fValue := sTurbineData.RotorSpeed;
+	fbWTURBINE[nID].WTURBINELD0.WROT1.BlPthAngVal.mag.fValue := sTurbineData.PitchAngle;
+	fbWTURBINE[nID].WTURBINELD0.WROT1.BlPthAngTgt.mag.fValue := sTurbineData.PitchAngleSpt;
+// 	fbWTURBINE[nID].WTURBINELD0.WCN
 END_IF]]></ST>
     </Implementation>
   </POU>

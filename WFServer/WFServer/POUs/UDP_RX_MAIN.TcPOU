@@ -18,6 +18,9 @@ fbCloseAll( sSrvNetId := sSrvNetId, bExecute:= bInitialize );
 IF fbCloseAll.bBusy OR fbCloseAll.bError THEN
 	RETURN;
 END_IF
+// IF NOT fbCloseAll.nErrId THEN
+//     RETURN; // Not done yet
+// END_IF
 bInitialize := FALSE;
 
 fbRx(fbRxFifo:=fbRxFIFO, bEnable:=bEnable, bLog:=bLog);]]></ST>

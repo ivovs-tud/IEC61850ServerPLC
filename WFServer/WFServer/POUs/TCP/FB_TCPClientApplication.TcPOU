@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_TCPClientApplication" Id="{4d9edbc1-4cd7-48b1-9310-f8e44ed95db0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TCPClientApplication
+VAR_IN_OUT
+	fbTx 		: FB_TCPFrameFifo;(* TX fifo *)
+	fbRx 		: FB_TCPFrameFifo;(* RX fifo *)
+	fbLog		: FB_LogFifo;(* Log message fifo *)
+END_VAR
+VAR
+	stToServer	: TCP_DATA;
+	stFromServer: TCP_DATA;
+	sLogMessage	: T_MaxString := '';
+	nCounter	: UDINT;
+	fbSndTimer	: TON;
+	i: UDINT;
+	fbFormat   : FB_FormatString;
+	sFormatted : T_MaxString;
+	
+	
+	fbTime   : FB_LocalSystemTime := ( bEnable := TRUE, dwCycle := 1 );
+	sTime 	: T_MaxString;
+ 	nDataLen     : INT;
+    nUnixTime    : LINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*------------------- Send cyclic message strings ------------------------------------*)
+(* TODO: Make this 'application/task' agnostic. *)
+(* For now, it always sends logging data to the historian *)
+fbSndTimer( IN := TRUE, PT := cTCP_SEND_CYCLE_TIME );
+IF fbSndTimer.Q THEN(* Send string to server *)
+	fbSndTimer( IN := FALSE );
+
+// 	nCounter := nCounter  + 1;
+// 	stToServer := MAXSTRING_TO_BYTEARR(CONCAT( 'Client message: ', UDINT_TO_STRING(nCounter) ));
+//  
+// 	fbTx.AddTail( stPut := stToServer );(* Put string to the tx fifo *)
+// 	IF NOT fbTx.bOk THEN(* TX fifo overflow => log error *)
+// 		fbLog.Error( sMessage := 'FB_FrameFifo(sender)\0', nErrID := cTCP_ERROR_SENDFIFO_OVERFLOW );
+// 	END_IF
+	
+	fbTime();
+	sTime := SYSTEMTIME_TO_STRING(fbTime.systemTime);
+	FOR i := 1 TO c_nNumTurbines DO
+		
+		stToServer.nID := i;
+		stToServer.nUnixTime := (F_GetSystemTime() - 116444736000000000) / 10000000;
+		stToServer.YwAng := fbWTURBINE[i].WTURBINELD0.WYAW1.YwAng.mag.fValue;
+		stToServer.YwAngSpt := fbWTURBINE[i].WTURBINELD0.WYAW1.YwAngSpt.val.mxVal.fValue;
+		stToServer.W := fbWTURBINE[i].WTURBINELD0.WTUR1.W.mag.fValue;
+		stToServer.WSpt := fbWTURBINE[i].WTURBINELD0.WTUR1.DmdWSpt.val.mxVal.fValue;
+		stToServer.HorWdSpd := fbWTURBINE[i].WTURBINELD0.WMET1.HorWdSpd.mag.fValue;
+		stToServer.HorWdDir := fbWTURBINE[i].WTURBINELD0.WMET1.HorWdDir.mag.fValue;
+		stToServer.RotSpd := fbWTURBINE[i].WTURBINELD0.WROT1.RotSpd.mag.fValue;
+		stToServer.PitchAngle := fbWTURBINE[i].WTURBINELD0.WROT1.BlPthAngVal.mag.fValue;
+		stToServer.PitchAngleSpt := fbWTURBINE[i].WTURBINELD0.WROT1.BlPthAngTgt.mag.fValue;
+// 		stToServer.GenTorque := fbWTURBINE[i].WTURBINELD0.WROT1.
+		
+		
+		
+		
+		fbTx.AddTail( stPut := stToServer );(* Put string to the tx fifo *)
+		IF NOT fbTx.bOk THEN(* TX fifo overflow => log error *)
+			fbLog.Error( sMessage := 'FB_FrameFifo(sender)\0', nErrID := cTCP_ERROR_SENDFIFO_OVERFLOW );
+		END_IF
+	END_FOR
+
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
