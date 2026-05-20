@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Productversion="">
-  <POU Name="FB_DO_WTURBINE_LD0_LLN0_NamPlt" Id="1ca42f19-d626-4ea6-a6a2-5e05a5d7ab79" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_DO_WTURBINE_LD0_LLN0_NamPlt" Id="{7bcc28bf-bbc6-417e-ad58-2e1f3848f622}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'no_assign'}
 FUNCTION_BLOCK FB_DO_WTURBINE_LD0_LLN0_NamPlt EXTENDS FB_AcsiCommonDataClass
 VAR_INPUT
-	vendor: FB_AcsiDATypeVisString255 := (Fc:=ACSI_FC_DC, sValue:='WindIED', bLinkResult:=THIS^.AddDataToContainer(ipData:=vendor));
-	swRev: FB_AcsiDATypeVisString255 := (Fc:=ACSI_FC_DC, sValue:='1.0', bLinkResult:=THIS^.AddDataToContainer(ipData:=swRev));
-	ldNs: FB_AcsiDATypeVisString255 := (Fc:=ACSI_FC_EX, sValue:='IEC 61400-25-2:2015', bLinkResult:=THIS^.AddDataToContainer(ipData:=ldNs));
+	vendor: FB_AcsiDATypeVisString255 := (Fc:=ACSI_FC_DC, bLinkResult:=THIS^.AddDataToContainer(ipData:=vendor));
+	swRev: FB_AcsiDATypeVisString255 := (Fc:=ACSI_FC_DC, bLinkResult:=THIS^.AddDataToContainer(ipData:=swRev));
+	ldNs: FB_AcsiDATypeVisString255 := (Fc:=ACSI_FC_EX, sValue:='IEC 61850-7-4:2007', bLinkResult:=THIS^.AddDataToContainer(ipData:=ldNs));
 END_VAR
 VAR
 END_VAR]]></Declaration>

@@ -1,17 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Productversion="">
-  <POU Name="FB_LN_WTURBINE_LD0_WROT1" Id="f7cfb90e-2e8f-47d9-b40a-53a0e96efcc0" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_LN_WTURBINE_LD0_WROT1" Id="{2ebb8303-e005-4174-88eb-1840d3b49d12}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'no_assign'}
 FUNCTION_BLOCK FB_LN_WTURBINE_LD0_WROT1 EXTENDS FB_AcsiCommonLogicalNodeClass
 VAR_INPUT
 	Beh: FB_DO_WTURBINE_LD0_WROT1_Beh := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Beh));
 	RotSpd: FB_DO_WTURBINE_LD0_WROT1_RotSpd := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=RotSpd));
-	RotSt: FB_DO_WTURBINE_LD0_WROT1_RotSt := (sClass:='STV', bLinkResult:=THIS^.AddDataToContainer(ipData:=RotSt));
-	BlSt: FB_DO_WTURBINE_LD0_WROT1_BlSt := (sClass:='STV', bLinkResult:=THIS^.AddDataToContainer(ipData:=BlSt));
+	BlPthAngTgt: FB_DO_WTURBINE_LD0_WROT1_BlPthAngTgt := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=BlPthAngTgt));
 	BlPthAngVal: FB_DO_WTURBINE_LD0_WROT1_BlPthAngVal := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=BlPthAngVal));
-	PthCtlSt: FB_DO_WTURBINE_LD0_WROT1_PthCtlSt := (sClass:='STV', bLinkResult:=THIS^.AddDataToContainer(ipData:=PthCtlSt));
-	RotBlk: FB_DO_WTURBINE_LD0_WROT1_RotBlk := (sClass:='CMD', bLinkResult:=THIS^.AddDataToContainer(ipData:=RotBlk));
-	BlPthAngTgt: FB_DO_WTURBINE_LD0_WROT1_BlPthAngTgt := (sClass:='SPV', bLinkResult:=THIS^.AddDataToContainer(ipData:=BlPthAngTgt));
 END_VAR
 VAR
 END_VAR]]></Declaration>

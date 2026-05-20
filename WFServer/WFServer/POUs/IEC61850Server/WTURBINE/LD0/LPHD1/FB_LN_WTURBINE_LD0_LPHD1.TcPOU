@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Productversion="">
-  <POU Name="FB_LN_WTURBINE_LD0_LPHD1" Id="04dfaecd-1688-40d5-8541-44e059bf06af" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_LN_WTURBINE_LD0_LPHD1" Id="{4f8ff99b-2dda-462b-8dba-e3f017ceb577}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'no_assign'}
 FUNCTION_BLOCK FB_LN_WTURBINE_LD0_LPHD1 EXTENDS FB_AcsiCommonLogicalNodeClass
 VAR_INPUT
-	PhyNam: FB_DO_WTURBINE_LD0_LPHD1_PhyNam := (sClass:='DPL', bLinkResult:=THIS^.AddDataToContainer(ipData:=PhyNam));
+	PhyNam: FB_DO_WTURBINE_LD0_LPHD1_PhyNam := (sClass:='WDPL', bLinkResult:=THIS^.AddDataToContainer(ipData:=PhyNam));
 	PhyHealth: FB_DO_WTURBINE_LD0_LPHD1_PhyHealth := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=PhyHealth));
 	Proxy: FB_DO_WTURBINE_LD0_LPHD1_Proxy := (sClass:='SPS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Proxy));
 END_VAR

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Productversion="">
-  <POU Name="FB_DO_WTURBINE_LD0_WNAC1_Beh" Id="552820db-77ef-4b33-b1a5-937168530d91" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_DO_WTURBINE_LD0_WCNV1_Beh" Id="{3483cfcd-933b-421f-825f-a2d844e23f0b}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'no_assign'}
-FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WNAC1_Beh EXTENDS FB_AcsiCommonDataClass
+FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WCNV1_Beh EXTENDS FB_AcsiCommonDataClass
 VAR_INPUT
 	stVal: FB_AcsiDATypeBeh := (Fc:=ACSI_FC_ST, TrgOp:=ACSI_TrgOp_dchg OR ACSI_TrgOp_dupd, bLinkResult:=THIS^.AddDataToContainer(ipData:=stVal));
 	q: FB_AcsiDATypeQuality := (Fc:=ACSI_FC_ST, TrgOp:=ACSI_TrgOp_qchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=q));

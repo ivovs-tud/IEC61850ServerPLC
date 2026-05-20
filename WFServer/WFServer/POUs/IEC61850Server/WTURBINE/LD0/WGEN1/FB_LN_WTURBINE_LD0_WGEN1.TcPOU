@@ -1,15 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Productversion="">
-  <POU Name="FB_LN_WTURBINE_LD0_WGEN1" Id="35e239d6-72f3-4c2a-bbe7-6c6aef0efa4b" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_LN_WTURBINE_LD0_WGEN1" Id="{da2921c2-550f-4c6b-ac13-6d9f6223cb3f}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'no_assign'}
 FUNCTION_BLOCK FB_LN_WTURBINE_LD0_WGEN1 EXTENDS FB_AcsiCommonLogicalNodeClass
 VAR_INPUT
 	Beh: FB_DO_WTURBINE_LD0_WGEN1_Beh := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Beh));
 	RotSpd: FB_DO_WTURBINE_LD0_WGEN1_RotSpd := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=RotSpd));
-	TotW: FB_DO_WTURBINE_LD0_WGEN1_TotW := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=TotW));
-	TotVAr: FB_DO_WTURBINE_LD0_WGEN1_TotVAr := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=TotVAr));
-	TmpWdg: FB_DO_WTURBINE_LD0_WGEN1_TmpWdg := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=TmpWdg));
-	TmpBrg: FB_DO_WTURBINE_LD0_WGEN1_TmpBrg := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=TmpBrg));
 END_VAR
 VAR
 END_VAR]]></Declaration>

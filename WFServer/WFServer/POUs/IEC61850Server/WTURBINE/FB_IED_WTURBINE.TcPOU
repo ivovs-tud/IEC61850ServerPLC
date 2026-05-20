@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_IED_WTURBINE" Id="{77eafbcc-30b8-4adb-8136-2d22311f7c2a}" SpecialFunc="None">
+  <POU Name="FB_IED_WTURBINE" Id="{800a32bd-c2a8-4ee4-a3fd-60f721a9d4f0}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'no_assign'}
 {attribute 'call_after_init'}
 FUNCTION_BLOCK FB_IED_WTURBINE EXTENDS FB_AcsiCommonIntelligentElectronicDeviceClass

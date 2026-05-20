@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Productversion="">
-  <POU Name="FB_DO_WTURBINE_LD0_WAPC1_WSetPt" Id="46d5c246-7c5d-480e-90ba-5dcffd232a9b" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_DO_WTURBINE_LD0_WYAW1_YwAngSpt_val" Id="{87d43a65-9cb4-4f2c-8ca0-1015ecd062d7}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'no_assign'}
-FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WAPC1_WSetPt EXTENDS FB_AcsiCommonDataClass
+FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WYAW1_YwAngSpt_val EXTENDS FB_AcsiCommonControllableDataClass
 VAR_INPUT
+	origin: FB_AcsiDATypeOriginator := (Fc:=ACSI_FC_MX, bLinkResult:=THIS^.AddDataToContainer(ipData:=origin));
 	mxVal: FB_AcsiDATypeAnalogueValue := (Fc:=ACSI_FC_MX, TrgOp:=ACSI_TrgOp_dchg, i:=(bPresence:=FALSE), bLinkResult:=THIS^.AddDataToContainer(ipData:=mxVal));
 	q: FB_AcsiDATypeQuality := (Fc:=ACSI_FC_MX, TrgOp:=ACSI_TrgOp_qchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=q));
 	t: FB_AcsiDATypeTimeStamp := (Fc:=ACSI_FC_MX, bLinkResult:=THIS^.AddDataToContainer(ipData:=t));
-	ctlModel: FB_AcsiDATypeCtlModels := (Fc:=ACSI_FC_CF, eValue:=E_AcsiCtlModels.DirectWithNormalSecurity, bLinkResult:=THIS^.AddDataToContainer(ipData:=ctlModel));
+	ctlModel: FB_AcsiDATypeCtlModels := (Fc:=ACSI_FC_CF, TrgOp:=ACSI_TrgOp_dchg, eValue:=E_AcsiCtlModels.DirectWithNormalSecurity, bLinkResult:=THIS^.AddDataToContainer(ipData:=ctlModel));
 	Oper: FB_AcsiCDC_Oper_AnalogueValue := (Fc:=ACSI_FC_CO, ctlVal:=(i:=(bPresence:=FALSE)), bLinkResult:=THIS^.AddDataToContainer(ipData:=Oper));
-	SBOw: FB_AcsiCDC_Oper_AnalogueValue := (Fc:=ACSI_FC_CO, ctlVal:=(i:=(bPresence:=FALSE)), bLinkResult:=THIS^.AddDataToContainer(ipData:=SBOw));
-	Cancel: FB_AcsiCDC_Cancel_AnalogueValue := (Fc:=ACSI_FC_CO, ctlVal:=(i:=(bPresence:=FALSE)), bLinkResult:=THIS^.AddDataToContainer(ipData:=Cancel));
+	
+	fbControl: FB_DirectControl := (ipCtrl:=THIS^.AddServerJob(ipEvent:=fbControl, ipCompletion:=fbControl));
 END_VAR
 VAR
 END_VAR]]></Declaration>

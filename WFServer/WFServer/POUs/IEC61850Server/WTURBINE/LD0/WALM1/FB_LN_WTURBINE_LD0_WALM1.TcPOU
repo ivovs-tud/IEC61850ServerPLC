@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Productversion="">
-  <POU Name="FB_LN_WTURBINE_LD0_WALM1" Id="efe25700-4738-413f-8a8d-284a951a10cf" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_LN_WTURBINE_LD0_WALM1" Id="{21b07012-2fad-47e4-a5d5-b3a26da7c962}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'no_assign'}
 FUNCTION_BLOCK FB_LN_WTURBINE_LD0_WALM1 EXTENDS FB_AcsiCommonLogicalNodeClass
 VAR_INPUT
 	Beh: FB_DO_WTURBINE_LD0_WALM1_Beh := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Beh));
-	AlmSt: FB_DO_WTURBINE_LD0_WALM1_AlmSt := (sClass:='AST', bLinkResult:=THIS^.AddDataToContainer(ipData:=AlmSt));
 END_VAR
 VAR
 END_VAR]]></Declaration>

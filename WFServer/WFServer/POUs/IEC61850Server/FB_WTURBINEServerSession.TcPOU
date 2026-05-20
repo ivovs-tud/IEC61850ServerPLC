@@ -32,10 +32,18 @@ eLinkStatus:= fbConnection.eLinkStatus;
 // fbWTURBINE.WTURBINELD0.WNAC1.CtlMd.fbControl.Execute();
 // fbWTURBINE.WTURBINELD0.WYAW1.YwBrk.fbControl.Execute();
 
+// fbWTURBINE[nID].WTURBINELD0.LLN0.Mod_.fbControl.Execute();
+// fbWTURBINE[nID].WTURBINELD0.WTUR1.CmdBlk.fbControl.Execute();
+// fbWTURBINE[nID].WTURBINELD0.WNAC1.CtlMd.fbControl.Execute();
+// fbWTURBINE[nID].WTURBINELD0.WYAW1.YwBrk.fbControl.Execute();
+// fbWTURBINE[nID].WTURBINELD0.WTUR1.DmdWSpt.fbControl.Execute();
+
 fbWTURBINE[nID].WTURBINELD0.LLN0.Mod_.fbControl.Execute();
-fbWTURBINE[nID].WTURBINELD0.WTUR1.CmdBlk.fbControl.Execute();
-fbWTURBINE[nID].WTURBINELD0.WNAC1.CtlMd.fbControl.Execute();
-fbWTURBINE[nID].WTURBINELD0.WYAW1.YwBrk.fbControl.Execute();
+fbWTURBINE[nID].WTURBINELD0.WTUR1.TurOp.st_.fbControl.Execute();
+fbWTURBINE[nID].WTURBINELD0.WTUR1.DmdWSpt.val.fbControl.Execute();
+fbWTURBINE[nID].WTURBINELD0.WYAW1.YwAngSpt.val.fbControl.Execute();
+fbWTURBINE[nID].WTURBINELD0.WPPD1.DevOp.st_.fbControl.Execute();
+fbWTURBINE[nID].WTURBINELD0.WPPD1.ClrOp.st_.fbControl.Execute();
 
 CASE state OF
 	0: (* Initial state *)

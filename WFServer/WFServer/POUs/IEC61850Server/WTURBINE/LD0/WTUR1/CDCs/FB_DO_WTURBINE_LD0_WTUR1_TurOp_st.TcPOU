@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_DO_WTURBINE_LD0_WTUR1_TurOp_st" Id="{b8f2e636-f60e-4baf-ad1e-865fa4a0e5fb}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WTUR1_TurOp_st EXTENDS FB_AcsiCommonControllableDataClass
+VAR_INPUT
+	stVal: FB_AcsiDATypeTurOp := (Fc:=ACSI_FC_ST, TrgOp:=ACSI_TrgOp_dchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=stVal));
+	q: FB_AcsiDATypeQuality := (Fc:=ACSI_FC_ST, TrgOp:=ACSI_TrgOp_qchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=q));
+	t: FB_AcsiDATypeTimeStamp := (Fc:=ACSI_FC_ST, bLinkResult:=THIS^.AddDataToContainer(ipData:=t));
+	ctlModel: FB_AcsiDATypeCtlModels := (Fc:=ACSI_FC_CF, TrgOp:=ACSI_TrgOp_dchg, eValue:=E_AcsiCtlModels.DirectWithNormalSecurity, bLinkResult:=THIS^.AddDataToContainer(ipData:=ctlModel));
+	
+	fbControl: FB_DirectControl := (ipCtrl:=THIS^.AddServerJob(ipEvent:=fbControl, ipCompletion:=fbControl));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

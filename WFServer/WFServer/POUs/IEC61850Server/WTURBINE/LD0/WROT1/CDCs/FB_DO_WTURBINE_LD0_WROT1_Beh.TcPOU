@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Productversion="">
-  <POU Name="FB_DO_WTURBINE_LD0_WROT1_Beh" Id="f8d7a2c2-0532-4df5-899c-e172ccd70dd1" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_DO_WTURBINE_LD0_WROT1_Beh" Id="{7285ce1e-3c10-4391-9d7a-abdbb57eaed3}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'no_assign'}
 FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WROT1_Beh EXTENDS FB_AcsiCommonDataClass
 VAR_INPUT

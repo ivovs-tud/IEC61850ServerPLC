@@ -1,15 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Productversion="">
-  <POU Name="FB_LN_WTURBINE_LD0_WYAW1" Id="4924fb2b-8ee1-4809-9efe-8b85755e9ed6" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_LN_WTURBINE_LD0_WYAW1" Id="{4ea6dc1f-8b13-49c3-9d45-dc4cc3d5423a}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'no_assign'}
 FUNCTION_BLOCK FB_LN_WTURBINE_LD0_WYAW1 EXTENDS FB_AcsiCommonLogicalNodeClass
 VAR_INPUT
 	Beh: FB_DO_WTURBINE_LD0_WYAW1_Beh := (sClass:='ENS', bLinkResult:=THIS^.AddDataToContainer(ipData:=Beh));
 	YwAng: FB_DO_WTURBINE_LD0_WYAW1_YwAng := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=YwAng));
 	CabWup: FB_DO_WTURBINE_LD0_WYAW1_CabWup := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=CabWup));
-	YwOp: FB_DO_WTURBINE_LD0_WYAW1_YwOp := (sClass:='CMD', bLinkResult:=THIS^.AddDataToContainer(ipData:=YwOp));
 	YwAngSpt: FB_DO_WTURBINE_LD0_WYAW1_YwAngSpt := (sClass:='SPV', bLinkResult:=THIS^.AddDataToContainer(ipData:=YwAngSpt));
-	YwBrk: FB_DO_WTURBINE_LD0_WYAW1_YwBrk := (sClass:='SPC', bLinkResult:=THIS^.AddDataToContainer(ipData:=YwBrk));
 END_VAR
 VAR
 END_VAR]]></Declaration>

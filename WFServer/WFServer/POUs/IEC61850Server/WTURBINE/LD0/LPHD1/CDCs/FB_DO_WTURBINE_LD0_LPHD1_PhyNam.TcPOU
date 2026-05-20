@@ -1,14 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Productversion="">
-  <POU Name="FB_DO_WTURBINE_LD0_LPHD1_PhyNam" Id="7649ae63-5667-46c0-8d7b-be0298966bd1" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_DO_WTURBINE_LD0_LPHD1_PhyNam" Id="{e55a5fe3-d98d-488b-8701-306d56fb9b9c}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'no_assign'}
 FUNCTION_BLOCK FB_DO_WTURBINE_LD0_LPHD1_PhyNam EXTENDS FB_AcsiCommonDataClass
 VAR_INPUT
 	vendor: FB_AcsiDATypeVisString255 := (Fc:=ACSI_FC_DC, bLinkResult:=THIS^.AddDataToContainer(ipData:=vendor));
-	hwRev: FB_AcsiDATypeVisString255 := (Fc:=ACSI_FC_DC, bLinkResult:=THIS^.AddDataToContainer(ipData:=hwRev));
-	swRev: FB_AcsiDATypeVisString255 := (Fc:=ACSI_FC_DC, bLinkResult:=THIS^.AddDataToContainer(ipData:=swRev));
-	serNum: FB_AcsiDATypeVisString64 := (Fc:=ACSI_FC_DC, bLinkResult:=THIS^.AddDataToContainer(ipData:=serNum));
-	model: FB_AcsiDATypeVisString255 := (Fc:=ACSI_FC_DC, bLinkResult:=THIS^.AddDataToContainer(ipData:=model));
 END_VAR
 VAR
 END_VAR]]></Declaration>

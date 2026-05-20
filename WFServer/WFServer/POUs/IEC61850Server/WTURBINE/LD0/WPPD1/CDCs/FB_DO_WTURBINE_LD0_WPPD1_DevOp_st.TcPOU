@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_DO_WTURBINE_LD0_WPPD1_DevOp_st" Id="{0c12e2c8-2345-474b-ae97-8d1891f21f09}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WPPD1_DevOp_st EXTENDS FB_AcsiCommonControllableDataClass
+VAR_INPUT
+	origin: FB_AcsiDATypeOriginator := (Fc:=ACSI_FC_ST, bLinkResult:=THIS^.AddDataToContainer(ipData:=origin));
+	stVal: FB_AcsiDATypeDevOp := (Fc:=ACSI_FC_ST, TrgOp:=ACSI_TrgOp_dchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=stVal));
+	q: FB_AcsiDATypeQuality := (Fc:=ACSI_FC_ST, TrgOp:=ACSI_TrgOp_qchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=q));
+	t: FB_AcsiDATypeTimeStamp := (Fc:=ACSI_FC_ST, bLinkResult:=THIS^.AddDataToContainer(ipData:=t));
+	ctlModel: FB_AcsiDATypeCtlModels := (Fc:=ACSI_FC_CF, TrgOp:=ACSI_TrgOp_dchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=ctlModel));
+	Cancel: FB_AcsiDATypeDelAct := (Fc:=ACSI_FC_CO, bLinkResult:=THIS^.AddDataToContainer(ipData:=Cancel));
+	Oper: FB_AcsiCDC_Oper_ENUMERATED := (Fc:=ACSI_FC_CO, bLinkResult:=THIS^.AddDataToContainer(ipData:=Oper));
+	SBO: FB_AcsiCDC_SBO := (Fc:=ACSI_FC_CO, bLinkResult:=THIS^.AddDataToContainer(ipData:=SBO));
+	
+	fbControl: FB_DirectControl := (ipCtrl:=THIS^.AddServerJob(ipEvent:=fbControl, ipCompletion:=fbControl));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
