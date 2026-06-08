@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1">
   <GVL Name="CONSTANTS" Id="{1cd14af3-4e9e-4476-ae7a-07aec11c47f3}">
     <Declaration><![CDATA[VAR_GLOBAL CONSTANT
-	c_nNumTurbines	: UDINT := 3;
+	c_nNumTurbines	: UDINT := 9;
 	
 	(* IEC 61850 Server Definitions *)
 	c_aIpAddr 		: STRING := '172.19.3.190';

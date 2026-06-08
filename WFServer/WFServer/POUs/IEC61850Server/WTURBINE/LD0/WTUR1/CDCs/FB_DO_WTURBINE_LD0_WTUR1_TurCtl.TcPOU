@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Productversion="">
+  <POU Name="FB_DO_WTURBINE_LD0_WTUR1_TurCtl" Id="10046b41-63ac-4976-ba9e-8293b8d63d3b" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WTUR1_TurCtl EXTENDS FB_AcsiCommonDataClass
+VAR_INPUT
+	st_: FB_DO_WTURBINE_LD0_WTUR1_TurCtl_st := (sObjectName:='st', sClass:='ENC', bLinkResult:=THIS^.AddDataToContainer(ipData:=st_));
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

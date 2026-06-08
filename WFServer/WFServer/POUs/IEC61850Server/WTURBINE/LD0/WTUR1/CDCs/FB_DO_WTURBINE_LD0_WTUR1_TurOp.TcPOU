@@ -4,6 +4,7 @@
     <Declaration><![CDATA[{attribute 'no_assign'}
 FUNCTION_BLOCK FB_DO_WTURBINE_LD0_WTUR1_TurOp EXTENDS FB_AcsiCommonDataClass
 VAR_INPUT
+	cmdAcs: FB_AcsiBATypeINT8U := (Fc:=ACSI_FC_CF, bLinkResult:=THIS^.AddDataToContainer(ipData:=cmdAcs));
 	st_: FB_DO_WTURBINE_LD0_WTUR1_TurOp_st := (sObjectName:='st', sClass:='ENC', bLinkResult:=THIS^.AddDataToContainer(ipData:=st_));
 END_VAR
 VAR

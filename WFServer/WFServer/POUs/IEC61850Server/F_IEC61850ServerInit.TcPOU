@@ -11,6 +11,7 @@ END_VAR
       <ST><![CDATA[FOR i := 1 TO c_nNumTurbines DO
 	fbServer[i].ipIED := fbWTURBINE[i];
 	
+	
 	fbServer[i].settings.bEnable := TRUE;
 	fbServer[i].settings.sLocalHost := c_aIpAddr;
 	fbServer[i].settings.nLocalPort := c_aMMSPortBase + i - 1;
@@ -28,6 +29,8 @@ END_VAR
 		fbSession[i,j].fbConnection.settings.bEnable := TRUE;
 		fbSession[i,j].nID := i;
 	END_FOR
+	
+	fbWTURBINE[i].WTURBINELD0.WPPD1.ds01.OnInit();
 END_FOR]]></ST>
     </Implementation>
   </POU>

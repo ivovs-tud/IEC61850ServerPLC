@@ -13,7 +13,7 @@ VAR_INPUT
 	sRemoteHost	: T_IPv4Addr 	:= '127.0.0.1';(* IP address of remote server *)
 	nRemotePort	: UDINT			:= 200;(* Remote server port *)
 	bEnable		: BOOL			:= FALSE;(* TRUE => Enable/connect, FALSE => Disable/disconnect *)
-	tReconnect	: TIME 			:= T#45S;(* Try to reconnect after this time *)
+	tReconnect	: TIME 			:= T#5S;(* Try to reconnect after this time *)
 	bLog		: BOOL 			:= FALSE; (* TRUE => Enable debug output, FALSE => Disable debug output *)
 	sPrefix		: STRING 		:= 'CLIENT::';(* Log message description string (allows the identification of log message source) *)
 END_VAR

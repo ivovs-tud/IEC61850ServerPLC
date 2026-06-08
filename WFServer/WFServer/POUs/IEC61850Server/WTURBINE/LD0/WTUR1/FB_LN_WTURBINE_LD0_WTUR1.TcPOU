@@ -10,6 +10,7 @@ VAR_INPUT
 	W: FB_DO_WTURBINE_LD0_WTUR1_W := (sClass:='MV', bLinkResult:=THIS^.AddDataToContainer(ipData:=W));
 	TurOp: FB_DO_WTURBINE_LD0_WTUR1_TurOp := (sClass:='CMD', bLinkResult:=THIS^.AddDataToContainer(ipData:=TurOp));
 	DmdWSpt: FB_DO_WTURBINE_LD0_WTUR1_DmdWSpt := (sClass:='SPV', bLinkResult:=THIS^.AddDataToContainer(ipData:=DmdWSpt));
+	TurCtl: FB_DO_WTURBINE_LD0_WTUR1_TurCtl := (sClass:='CMD', bLinkResult:=THIS^.AddDataToContainer(ipData:=TurCtl));
 END_VAR
 VAR
 END_VAR]]></Declaration>

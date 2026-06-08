@@ -7,6 +7,7 @@ TYPE S_TURBINECMD :
 STRUCT
 	bEnable 		: ARRAY[1..c_nNumTurbines] OF BOOL;
 	bEmergencyStop	: ARRAY[1..c_nNumTurbines] OF BOOL;
+	eCtrlMode		: ARRAY[1..c_nNumTurbines] OF SINT;		// 1 Byte
 	fWSpt			: ARRAY[1..c_nNumTurbines] OF REAL;
 	fYawSpt			: ARRAY[1..c_nNumTurbines] OF REAL;
 END_STRUCT

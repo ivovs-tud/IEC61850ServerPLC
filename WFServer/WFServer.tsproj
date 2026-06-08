@@ -2,11 +2,6 @@
 <TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.14">
 	<Project ProjectGUID="{1C092DAE-A83A-49AB-B4F3-281756714756}" TargetNetId="169.254.166.114.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
-			<Licenses>
-				<Target>
-					<ManualSelect>{304D006A-8299-4560-AB79-438534B50288}</ManualSelect>
-				</Target>
-			</Licenses>
 			<Tasks>
 				<Task Id="5" Priority="15" CycleTime="100000" AmsPort="351" AdtTasks="true">
 					<Name>UDP_RX_TASK</Name>
@@ -29,7 +24,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{6CE933E7-89DB-4C8B-8A41-0BD257DC4EFB}" Name="WFServer" PrjFilePath="WFServer\WFServer.plcproj" TmcFilePath="WFServer\WFServer.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{A0A6EC28-5A87-4981-93D5-59481DE93CC0}" TmcPath="WFServer\WFServer.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{1F991270-3DF2-E827-D1DF-EB74F93160B1}" TmcPath="WFServer\WFServer.tmc">
 					<Name>WFServer Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>

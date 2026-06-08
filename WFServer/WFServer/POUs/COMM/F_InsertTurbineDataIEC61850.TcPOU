@@ -20,7 +20,7 @@ END_VAR
 	fbWTURBINE[nID].WTURBINELD0.WROT1.RotSpd.mag.fValue := sTurbineData.RotorSpeed;
 	fbWTURBINE[nID].WTURBINELD0.WROT1.BlPthAngVal.mag.fValue := sTurbineData.PitchAngle;
 	fbWTURBINE[nID].WTURBINELD0.WROT1.BlPthAngTgt.mag.fValue := sTurbineData.PitchAngleSpt;
-// 	fbWTURBINE[nID].WTURBINELD0.WCN
+ 	fbWTURBINE[nID].WTURBINELD0.WCNV1.Torq.mag.fValue := sTurbineData.GenTorque;
 END_IF]]></ST>
     </Implementation>
   </POU>

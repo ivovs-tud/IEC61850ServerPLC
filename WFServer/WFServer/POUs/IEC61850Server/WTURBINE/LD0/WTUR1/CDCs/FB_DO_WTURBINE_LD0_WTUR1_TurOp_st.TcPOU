@@ -8,6 +8,9 @@ VAR_INPUT
 	q: FB_AcsiDATypeQuality := (Fc:=ACSI_FC_ST, TrgOp:=ACSI_TrgOp_qchg, bLinkResult:=THIS^.AddDataToContainer(ipData:=q));
 	t: FB_AcsiDATypeTimeStamp := (Fc:=ACSI_FC_ST, bLinkResult:=THIS^.AddDataToContainer(ipData:=t));
 	ctlModel: FB_AcsiDATypeCtlModels := (Fc:=ACSI_FC_CF, TrgOp:=ACSI_TrgOp_dchg, eValue:=E_AcsiCtlModels.DirectWithNormalSecurity, bLinkResult:=THIS^.AddDataToContainer(ipData:=ctlModel));
+	Cancel: FB_AcsiCDC_Cancel_ENUMERATED := (Fc:=ACSI_FC_CO, bLinkResult:=THIS^.AddDataToContainer(ipData:=Cancel));
+	Oper: FB_AcsiCDC_Oper_ENUMERATED := (Fc:=ACSI_FC_CO, bLinkResult:=THIS^.AddDataToContainer(ipData:=Oper));
+	SBO: FB_AcsiCDC_SBO := (Fc:=ACSI_FC_CO, bLinkResult:=THIS^.AddDataToContainer(ipData:=SBO));
 	
 	fbControl: FB_DirectControl := (ipCtrl:=THIS^.AddServerJob(ipEvent:=fbControl, ipCompletion:=fbControl));
 END_VAR

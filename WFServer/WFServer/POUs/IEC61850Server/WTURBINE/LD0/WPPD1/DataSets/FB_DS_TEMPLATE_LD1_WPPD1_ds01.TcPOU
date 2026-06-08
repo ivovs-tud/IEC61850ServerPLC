@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_DS_TEMPLATE_LD1_WPPD1_ds01" Id="{257159e2-361a-42ab-be99-f64fcdc4ba68}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_assign'}
+{attribute 'call_after_init'}
+FUNCTION_BLOCK FB_DS_TEMPLATE_LD1_WPPD1_ds01 EXTENDS FB_AcsiCommonDataSetClass
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="OnInit" Id="{96e51817-4a3f-4c9c-ab28-a2718b4f3391}">
+      <Declaration><![CDATA[METHOD OnInit : BOOL
+VAR
+	nID : UDINT;
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// First find the nID this is part of
+nID := c_nNumTurbines + 10;
+FOR i := 1 TO c_nNumTurbines DO
+    IF ADR(fbWTURBINE[i].WTURBINELD0.WPPD1.ds01) = ADR(THIS^) THEN
+        nID := i;
+        EXIT;
+    END_IF
+END_FOR
+
+IF NOT DeleteAllMembers() THEN RETURN; END_IF
+IF NOT AddMember(ipData:=fbWTURBINE[nID].WTURBINELD0.WYAW1.YwAng, eFc:=E_AcsiFc.MX) THEN RETURN; END_IF
+IF NOT AddMember(ipData:=fbWTURBINE[nID].WTURBINELD0.WTUR1.W, eFc:=E_AcsiFc.MX) THEN RETURN; END_IF
+IF NOT AddMember(ipData:=fbWTURBINE[nID].WTURBINELD0.WROT1.RotSpd, eFc:=E_AcsiFc.MX) THEN RETURN; END_IF
+IF NOT AddMember(ipData:=fbWTURBINE[nID].WTURBINELD0.WROT1.BlPthAngTgt, eFc:=E_AcsiFc.MX) THEN RETURN; END_IF
+IF NOT AddMember(ipData:=fbWTURBINE[nID].WTURBINELD0.WROT1.BlPthAngVal, eFc:=E_AcsiFc.MX) THEN RETURN; END_IF
+IF NOT AddMember(ipData:=fbWTURBINE[nID].WTURBINELD0.WMET1.HorWdDir, eFc:=E_AcsiFc.MX) THEN RETURN; END_IF
+IF NOT AddMember(ipData:=fbWTURBINE[nID].WTURBINELD0.WMET1.HorWdSpd, eFc:=E_AcsiFc.MX) THEN RETURN; END_IF
+IF NOT AddMember(ipData:=fbWTURBINE[nID].WTURBINELD0.WCNV1.Torq, eFc:=E_AcsiFc.MX) THEN RETURN; END_IF
+OnInit:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

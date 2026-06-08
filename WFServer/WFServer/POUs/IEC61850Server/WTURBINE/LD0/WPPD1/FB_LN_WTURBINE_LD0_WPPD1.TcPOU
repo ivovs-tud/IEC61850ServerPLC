@@ -8,6 +8,10 @@ VAR_INPUT
 	DevSt: FB_DO_WTURBINE_LD0_WPPD1_DevSt := (sClass:='STV', bLinkResult:=THIS^.AddDataToContainer(ipData:=DevSt));
 	DevOp: FB_DO_WTURBINE_LD0_WPPD1_DevOp := (sClass:='CMD', bLinkResult:=THIS^.AddDataToContainer(ipData:=DevOp));
 	ClrOp: FB_DO_WTURBINE_LD0_WPPD1_ClrOp := (sClass:='CMD', bLinkResult:=THIS^.AddDataToContainer(ipData:=ClrOp));
+	
+	ds01: FB_DS_TEMPLATE_LD1_WPPD1_ds01 := (bLinkResult:=THIS^.AddDataSetToContainer(ipDataSet:=ds01));
+	
+	urcb01: FB_ScsmUrCBImplClass := (RptID:=(sValue:='WTURBINELD0/WPPD1.urcb01'), DatSet:=(sValue:='WTURBINELD0/WPPD1.ds01'), OptFlds:=(SequenceNumber:=FALSE, ReportTimeStamp:=FALSE, ReasonForInclusion:=FALSE, DataSetName:=FALSE, DataReference:=FALSE, BufferOverflow:=FALSE, EntryID:=FALSE, ConfRevision:=FALSE), TrgOps:=(DataChange:=FALSE, QualityChange:=FALSE, DataUpdate:=FALSE, Integrity:=FALSE, GeneralInterrogation:=TRUE), bLinkResult:=THIS^.AddUnbufferedReportControlBlockToContainer(ipUnbufferedReportControlBlock:=urcb01));
 END_VAR
 VAR
 END_VAR]]></Declaration>

@@ -78,7 +78,7 @@ END_VAR
 					nRemotePort := stSendTo.stRemoteAddr.nPort,
 					pSrc:= ADR( stSendTo.sMessage ),
 					//cbLen:= INT_TO_UDINT(LEN( stSendTo.sMessage )) + 1, (* Include the end delimiter *)
-					cbLen := 64,
+					cbLen := SIZEOF(UDP_DATA),
 					hSocket:= fbCreate.hSocket, bExecute:= TRUE );
 		eState := eUDP_STATE_SEND_WAIT;
 

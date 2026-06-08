@@ -9,13 +9,17 @@ VAR_OUTPUT
 	sTurbineCmd		: S_TURBINECMD;
 END_VAR
 VAR
+	temp: SINT;
 	nID: UDINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
 FOR nID := 1 TO c_nNumTurbines DO
-	sTurbineCmd.bEnable[nID] := TRUE;
+	temp := fbWTURBINE[nID].WTURBINELD0.WTUR1.TurOp.st_.stVal.iAny;
+	sTurbineCmd.bEnable[nID] :=  SINT_TO_BOOL(temp);
+	sTurbineCmd.bEmergencyStop[nID] := FALSE;
+	sTurbineCmd.eCtrlMode[nID] := fbWTURBINE[nID].WTURBINELD0.WTUR1.TurCtl.st_.stVal.iAny;
 	sTurbineCmd.fWSpt[nID] 	:= fbWTURBINE[nID].WTURBINELD0.WTUR1.DmdWSpt.val.mxVal.fValue;
 	sTurbineCmd.fYawSpt[nID] := fbWTURBINE[nID].WTURBINELD0.WYAW1.YwAngSpt.val.mxVal.fValue;
 END_FOR]]></ST>
